@@ -11,35 +11,73 @@
 /* ************************************************************************** */
 
 
-#include "../minilibx_macos/mlx.h"
-#include "../libft/libft.h"
+#include "mlx.h"
+#include "libft.h"
+#include "fdf.h"
 #include <stdio.h>
 
-typedef struct  s_map
+int		draw_pixel(int button, int x, int y, void *param)
 {
-    void    *win;
-    void    *mlx;
-}               t_map;
+	t_fdf	*fdf;
+	int		i;
 
-int draw_pixel(int button, int x, int y, void *param)
-{
-    mlx_pixel_put(((t_map*)param)->mlx, ((t_map*)param)->win, x, y, 200);
-    printf("%d\n", button);
-    return (0);
+	i = 0;
+	fdf = (t_fdf*)param;
+	printf("x = %d\ty = %d\t%d\n", x, y, button);
+	if (x >= 0 && y >= 0 && x <= fdf->x && y <= fdf->y && button == 1)
+	{
+		mlx_pixel_put(fdf->mlx, fdf->win, x, y, 255);
+		ft_vec_add(&(fdf->points), &x);
+		ft_vec_add(&(fdf->points), &y);
+	}
+
+	return (0);
 }
 
-int main(void)
+int		close_fdf(void *param)
 {
-    void    *win_ptr;
-    void    *mlx_ptr;
-    t_map   *map;
+	t_fdf	*fdf;
 
-    map = (t_map*)ft_memalloc(sizeof(t_map));
-    mlx_ptr = mlx_init();
-    win_ptr = mlx_new_window(mlx_ptr, 640, 480, "Untitled");
-    map->mlx = mlx_ptr;
-    map->win = win_ptr;
-    mlx_hook(win_ptr, 6, 0, draw_pixel, map);
-    mlx_loop(mlx_ptr);
-    return (0);
+	fdf = (t_fdf*)param;
+	mlx_destroy_window(fdf->mlx, fdf->win);
+	exit(1);
+}
+/*
+ * If not allocated then delete all !!!!
+ */
+
+t_fdf	*init(int size_x, int size_y, char *title)
+{
+	t_fdf	*fdf;
+	int 	i;
+
+	i = 0;
+	if (!(fdf = (t_fdf*)malloc(sizeof(t_fdf))))
+		return (NULL);
+	fdf->x = size_x;
+	fdf->y = size_y;
+	if (!(fdf->mlx = mlx_init()))
+		return (NULL);
+	if (!(fdf->win = mlx_new_window(fdf->mlx, fdf->x, fdf->y, title)))
+		return (NULL);
+	if (!(fdf->space = (int**)malloc(sizeof(int*) * fdf->x)))
+		return (NULL);
+	while (i <= fdf->y)
+		if (!(fdf->space[i++] = (int*)malloc(sizeof(int) * fdf->y)))
+			return (NULL);
+	if (!(fdf->points = ft_vec_init(10, sizeof(int))))
+		return (NULL);
+	return (fdf);
+}
+
+int		main(void)
+{
+	t_fdf	*fdf;
+
+	if (!(fdf = init(640, 480, "Untitled")))
+		return (-1);
+	mlx_hook(fdf->win, 4, 1L<< 0, draw_pixel, fdf);
+	mlx_hook(fdf->win, 17, 1L << 17, close_fdf, fdf);
+	mlx_loop(fdf->mlx);
+	return (0);
 }
