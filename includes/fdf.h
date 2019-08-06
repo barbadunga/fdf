@@ -26,7 +26,7 @@
 
 typedef struct	s_map
 {
-	int		**point;
+	t_vec	*points;
 	int 	width;
 	int 	height;
 }				t_map;
@@ -50,6 +50,6 @@ typedef struct	s_fdf
 void	draw_line(t_fdf *fdf, t_point p0, t_point p1);
 t_fdf	*fdf_init();
 void	event_handler(t_fdf *fdf);
-t_map	*read_map(char *filename);
+t_vec	*read_map(char *filename);
 
 #endif

@@ -14,50 +14,82 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-t_vec		*get_data(int fd)
+//t_vec		*get_data(int fd)
+//{
+//	t_vec	*raw_data;
+//	char	buff[1];
+//
+//	if (read(fd, NULL, 0) < 0 || !(raw_data = ft_vec_init(2, sizeof(char))))
+//		return (NULL);
+//	while (read(fd, buff, 1) > 0)
+//		ft_vec_add(&raw_data, buff);
+//	ft_vec_add(&raw_data, "\0");
+//	ft_putstr(raw_data->data);
+//	return (raw_data);
+//}
+
+//int			*ft_split(char	*line)
+//{
+//	int		*arr;
+//	int		counter;
+//	char	*ptr;
+//
+//	ptr = line;
+//	counter = 0;
+//	while (*ptr)
+//	{
+//		while (ft_isdigit(*ptr))
+//			ptr++;
+//		counter++;
+//		while (ft_isspace(*ptr))
+//			ptr++;
+//	}
+//	if (!(arr = (int*)malloc(sizeof(int) * counter)))
+//		return (NULL);
+//	counter = 0;
+//	while (*line)
+//	{
+//		arr[counter++] = ft_atoi(line);
+//		while (ft_isdigit(*line))
+//			line++;
+//		while (ft_isspace(*line))
+//			line++;
+//	}
+//	return (arr);
+//}
+
+t_vec	*ft_split(char *line)
 {
-	t_vec	*raw_data;
-	char	buff[1];
+	t_vec	*arr;
+	int		val;
 
-	if (read(fd, NULL, 0) < 0 || !(raw_data = ft_vec_init(2, sizeof(char))))
+	if (!(arr = ft_vec_init(2, sizeof(int))))
 		return (NULL);
-	while (read(fd, buff, 1) > 0)
-		ft_vec_add(&raw_data, buff);
-	ft_vec_add(&raw_data, "\0");
-	ft_putstr(raw_data->data);
-	return (raw_data);
-}
-
-static int *split(char *line)
-{
-	int		*arr;
-	char	*ptr;
-	int		counter;
-
-	ptr = line;
-	counter = 0;
-	while (*ptr)
-		*ptr++ == ' ' ? counter++ : 0;
-	if (!(arr = ft_memalloc(sizeof(int) * ((ptr - line) - counter))))
-		return (NULL);
+	while (*line)
+	{
+		val = ft_atoi(line);
+		ft_vec_add(&arr, &val);
+		while (ft_isdigit(*line))
+			line++;
+		while (ft_isspace(*line))
+			line++;
+	}
+	ft_vec_resize(&arr);
 	return (arr);
 }
 
-t_map		*read_map(char *filename)
+t_vec	*read_map(char *filename)
 {
-	t_map	*map;
+	t_vec	*map;
 	char	*line;
-	int		i;
 	int		fd;
 
 	if ((fd = open(filename, O_RDONLY)) < 0)
 		return (NULL);
-	i = 0;
-	while (get_next_line(fd, &line))
-	{
-		if (!(map->point[i] = split(line)))
-			// clean all stuff
-	}
-	map = NULL;
+	if (!(map = ft_vec_init(2, sizeof(t_vec*))))
+		return (NULL);
+	while (get_next_line(fd, &line) > 0)
+		ft_vec_add(&map, ft_split(line));
+	ft_vec_resize(&map);
 	return (map);
 }

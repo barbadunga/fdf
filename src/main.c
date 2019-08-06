@@ -12,16 +12,31 @@
 
 #include "fdf.h"
 
+void	print_vec(t_vec *vec)
+{
+	int	i;
+	int j;
+
+	while (i < vec->total)
+	{
+		while (j < ((t_vec*)vec->data)->total)
+		{
+
+		}
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	t_fdf	*fdf;
-	t_map	*map;
+	t_vec	*map;
 
 	if (argc != 2)
 		return (-1);
 	if (!(map = read_map(argv[1])))
 		return (0);
 	fdf = fdf_init();
+	print_vec(map);
 	event_handler(fdf);
 	mlx_loop(fdf->mlx);
 	return (0);
