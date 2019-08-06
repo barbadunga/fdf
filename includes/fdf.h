@@ -14,16 +14,42 @@
 #ifndef FDF_H
 # define FDF_H
 
-#include <math.h>
+# include <math.h>
+# include "mlx.h"
+# include "libft.h"
+# include <unistd.h>
+
+# define ABS(n) (n > 0 ? n : -n)
+# define EXIT_BUTTON 17
+# define HEIGHT 640
+# define WIDTH 480
+
+typedef struct	s_map
+{
+	int		**point;
+	int 	width;
+	int 	height;
+}				t_map;
+
+typedef struct	s_point
+{
+	int		x;
+	int 	y;
+	int 	z;
+	int 	color;
+}				t_point;
 
 typedef struct	s_fdf
 {
 	void	*win;
 	void	*mlx;
-	int		x;
-	int		y;
-	int		**space;
-	t_vec	*points;
+	void	*image;
+	char	prev;
 }				t_fdf;
+
+void	draw_line(t_fdf *fdf, t_point p0, t_point p1);
+t_fdf	*fdf_init();
+void	event_handler(t_fdf *fdf);
+t_map	*read_map(char *filename);
 
 #endif
