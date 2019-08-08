@@ -12,20 +12,20 @@
 
 #include "fdf.h"
 #include "mlx.h"
+#include <stdio.h>
 
 t_fdf	*fdf_init()
 {
 	t_fdf	*fdf;
-	int		i;
 
-	i = 0;
 	if (!(fdf = (t_fdf*)malloc(sizeof(t_fdf))))
 		return (NULL);
 	if (!(fdf->mlx = mlx_init()))
 		return (NULL);
 	if (!(fdf->win = mlx_new_window(fdf->mlx, HEIGHT, WIDTH, "FileDeFler")))
 		return (NULL);
-	if (!(fdf->image = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
+	if (!(fdf->img = mlx_new_image(fdf->mlx, HEIGHT, WIDTH)))
 		return (NULL);
+	fdf->data = mlx_get_data_addr(fdf->img, &fdf->bpp, &fdf->size_line, &fdf->end);
 	return (fdf);
 }

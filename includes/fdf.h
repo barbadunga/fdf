@@ -37,14 +37,19 @@ typedef struct	s_map
 	int		**plane;
 	int 	n_rows;
 	int 	n_cols;
+	int		size;
 }				t_map;
 
 typedef struct	s_fdf
 {
+	t_map	*map;
 	void	*win;
 	void	*mlx;
-	void	*image;
-	char	prev;
+	void	*img;
+	char	*data;
+	int		size_line;
+	int		bpp;
+	int 	end;
 }				t_fdf;
 
 void	draw_line(t_fdf *fdf, t_point p0, t_point p1);
@@ -53,5 +58,5 @@ t_fdf	*fdf_init();
 void	event_handler(t_fdf *fdf);
 t_map	*read_map(char *filename);
 void	draw(t_fdf *fdf, t_map *map);
-
+void	zoom(t_fdf *fdf);
 #endif

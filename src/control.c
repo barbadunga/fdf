@@ -15,24 +15,29 @@
 
 int 		keyborad(int key, void	*param)
 {
-	printf("KEY PRESSED - [%d]\n", key);
-	param += 0;
+	t_fdf	*fdf;
+
+	if (key > 0)
+		fdf = (t_fdf*)param;
 	return (1);
 }
 static int	mouse_press(int key, int x, int y, void *param)
 {
 	t_point	p;
 	t_point	p0;
+	static int i;
 	t_fdf	*fdf;
 
 	fdf  = (t_fdf*)param;
-	p.x = x;
-	p.y = y;
-	p0.x = WIDTH;
-	p0.y = HEIGHT;
+	p.x = y;
+	p.y = x;
+	p0.x = WIDTH / 2;
+	p0.y = HEIGHT / 2;
 	p.color = 0xFF0000;
 	if (key == 1)
 		draw_line(fdf, p0, p);
+	mlx_clear_window(fdf->mlx, fdf->win);
+	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, i++, 0);
 	return (1);
 }
 
@@ -47,7 +52,7 @@ static int	close_window(void *param)
 
 void		event_handler(t_fdf *fdf)
 {
-	mlx_hook(fdf->win, EXIT_BUTTON, 1L << 17, close_window, fdf);
+	mlx_hook(fdf->win, EXIT_BUTTON, 1LU << (unsigned)17, close_window, fdf);
 	mlx_hook(fdf->win, 2, 0, keyborad, fdf);
 	mlx_hook(fdf->win, 4, 0, mouse_press, fdf);
 }

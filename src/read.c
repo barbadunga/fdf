@@ -14,7 +14,7 @@
 #include <fcntl.h>
 
 /*
- * Need to cath all fails of allocation!
+ * Need to catch all fails of allocation!
  */
 
 static int	ft_parse_line(t_vec **vec, t_map **map, char *line)
@@ -89,6 +89,7 @@ t_map		*read_map(char *filename)
 		ft_parse_line(&vec, &map, line);
 		map->n_rows++;
 	}
+	map->size = (int)vec->total;
 	map->plane = create_plane(vec, map->n_rows, map->n_cols);
 	ft_vec_del(&vec);
 	return (map);
