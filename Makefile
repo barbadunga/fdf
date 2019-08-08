@@ -20,7 +20,7 @@ LIBFT_DIR = libft/
 LIBFT = $(LIBFT_DIR)
 
 SRC_DIR = src/
-SRC_LST = main.c init.c control.c render.c read.c
+SRC_LST = main.c init.c control.c draw_line.c read.c raster.c
 SOURCES = $(addprefix $(SRC_DIR), $(SRC_LST))
 
 all: $(BIN) $(LIBFT)

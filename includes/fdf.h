@@ -24,13 +24,6 @@
 # define HEIGHT 640
 # define WIDTH 480
 
-typedef struct	s_map
-{
-	t_vec	*points;
-	int 	width;
-	int 	height;
-}				t_map;
-
 typedef struct	s_point
 {
 	int		x;
@@ -38,6 +31,13 @@ typedef struct	s_point
 	int 	z;
 	int 	color;
 }				t_point;
+
+typedef struct	s_map
+{
+	int		**plane;
+	int 	n_rows;
+	int 	n_cols;
+}				t_map;
 
 typedef struct	s_fdf
 {
@@ -48,8 +48,10 @@ typedef struct	s_fdf
 }				t_fdf;
 
 void	draw_line(t_fdf *fdf, t_point p0, t_point p1);
+
 t_fdf	*fdf_init();
 void	event_handler(t_fdf *fdf);
-t_vec	*read_map(char *filename);
+t_map	*read_map(char *filename);
+void	draw(t_fdf *fdf, t_map *map);
 
 #endif

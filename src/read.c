@@ -12,84 +12,84 @@
 
 #include "fdf.h"
 #include <fcntl.h>
-#include <stdio.h>
 
-//t_vec		*get_data(int fd)
-//{
-//	t_vec	*raw_data;
-//	char	buff[1];
-//
-//	if (read(fd, NULL, 0) < 0 || !(raw_data = ft_vec_init(2, sizeof(char))))
-//		return (NULL);
-//	while (read(fd, buff, 1) > 0)
-//		ft_vec_add(&raw_data, buff);
-//	ft_vec_add(&raw_data, "\0");
-//	ft_putstr(raw_data->data);
-//	return (raw_data);
-//}
+/*
+ * Need to cath all fails of allocation!
+ */
 
-//int			*ft_split(char	*line)
-//{
-//	int		*arr;
-//	int		counter;
-//	char	*ptr;
-//
-//	ptr = line;
-//	counter = 0;
-//	while (*ptr)
-//	{
-//		while (ft_isdigit(*ptr))
-//			ptr++;
-//		counter++;
-//		while (ft_isspace(*ptr))
-//			ptr++;
-//	}
-//	if (!(arr = (int*)malloc(sizeof(int) * counter)))
-//		return (NULL);
-//	counter = 0;
-//	while (*line)
-//	{
-//		arr[counter++] = ft_atoi(line);
-//		while (ft_isdigit(*line))
-//			line++;
-//		while (ft_isspace(*line))
-//			line++;
-//	}
-//	return (arr);
-//}
-
-t_vec	*ft_split(char *line)
+static int	ft_parse_line(t_vec **vec, t_map **map, char *line)
 {
-	t_vec	*arr;
+	char	**tab;
+	int		i;
 	int		val;
 
-	if (!(arr = ft_vec_init(2, sizeof(int))))
-		return (NULL);
-	while (*line)
+	i = 0;
+	if (!(tab = ft_strsplit(line, ' ')))
+		return (-1);
+	while (tab[i])
 	{
-		val = ft_atoi(line);
-		ft_vec_add(&arr, &val);
-		while (ft_isdigit(*line))
-			line++;
-		while (ft_isspace(*line))
-			line++;
+		val = ft_atoi(tab[i++]);
+		ft_vec_add(vec, &val);
 	}
-	ft_vec_resize(&arr);
-	return (arr);
+	if (!(*map)->n_cols)
+		(*map)->n_cols = i;
+	return (1);
 }
 
-t_vec	*read_map(char *filename)
+static int		**create_plane(t_vec *vec, int rows, int cols)
 {
-	t_vec	*map;
+	int	**plane;
+	int	i;
+	int j;
+
+	i = 0;
+	if (!(plane = (int**)malloc(sizeof(int*) * rows)))
+		return (NULL);
+	while (i < rows)
+	{
+		j = 0;
+		if (!(plane[i] = (int*)malloc(sizeof(int) * cols)))
+			return (NULL);
+		while (j < cols)
+		{
+			plane[i][j] = ((int *)vec->data)[i * cols + j + 1];
+			j++;
+		}
+		i++;
+	}
+	return (plane);
+}
+
+static t_map	*init_map(void)
+{
+	t_map *map;
+
+	if (!(map = (t_map*)malloc(sizeof(t_map))))
+		return (NULL);
+	map->n_cols = 0;
+	map->n_rows = 0;
+	return (map);
+}
+
+t_map		*read_map(char *filename)
+{
+	t_map	*map;
+	t_vec	*vec;
 	char	*line;
 	int		fd;
 
 	if ((fd = open(filename, O_RDONLY)) < 0)
 		return (NULL);
-	if (!(map = ft_vec_init(2, sizeof(t_vec*))))
+	if (!(map = init_map()))
+		return (NULL);
+	if (!(vec = ft_vec_init(8, sizeof(int))))
 		return (NULL);
 	while (get_next_line(fd, &line) > 0)
-		ft_vec_add(&map, ft_split(line));
-	ft_vec_resize(&map);
+	{
+		ft_parse_line(&vec, &map, line);
+		map->n_rows++;
+	}
+	map->plane = create_plane(vec, map->n_rows, map->n_cols);
+	ft_vec_del(&vec);
 	return (map);
 }
