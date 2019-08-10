@@ -14,28 +14,41 @@
 #include <math.h>
 #include <stdio.h>
 
-#define RAD(f) f * 3.14 / 180
-
-t_point	rotate(t_point n)
+void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 {
-	t_point	p;
+	int *dat;
+	int	start;
 
-	p.x = (int)(cos(RAD(45)) * n.x - n.y * sin(RAD(45)));
-	p.y = (int)(n.x * sin(RAD(45)) + n.y * cos(RAD(45)));
-	p.z = 0;
-	p.color = n.color;
-	return (p);
+	start = y;
+	dat = (int *)fdf->data;
+	height += x;
+	width += y;
+	while (x < height && x < HEIGHT)
+	{
+		y = start;
+		while (y < width && y < WIDTH)
+			dat[x * WIDTH + y++] = color;
+		x++;
+	}
+}
+
+void 	zoom(t_fdf *fdf, int key)
+{
+	if (key == 4)
+		fdf->view->zoom++;
+	if (key == 5)
+		fdf->view->zoom--;
 }
 
 t_point	new_point(int x, int y, int z, int color)
 {
 	t_point p;
 
-	p.x = x * 10;
-	p.y = y * 10;
+	p.x = x;
+	p.y = y;
 	if (z != 0)
 		color = 0x0000FF;
-	p.z = z * 10;
+	p.z = z;
 	p.color = color;
 	return (p);
 }
@@ -52,15 +65,17 @@ void	draw(t_fdf *fdf, t_map *map)
 		j = 0;
 		while (j < map->n_cols)
 		{
-			cur = rotate(new_point(i, j, map->plane[i][j], 0xFF0000));
+			cur = new_point(i, j, map->plane[i][j], 0xFF0000);
 			if (i + 1 < map->n_rows)
-				draw_line(fdf, cur, rotate(new_point(i + 1, j, map->plane[i][j], cur.color)));
+				draw_line(fdf, cur,
+						new_point(i + 1, j, map->plane[i][j], cur.color));
 			if (j + 1 < map->n_cols)
-				draw_line(fdf, cur, rotate(new_point(i, j + 1, map->plane[i][j], cur.color)));
+				draw_line(fdf, cur,
+						new_point(i, j + 1, map->plane[i][j], cur.color));
 			j++;
 		}
 		i++;
 	}
 	mlx_clear_window(fdf->mlx, fdf->win);
-	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 50);
+	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 }

@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
 
 static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 {
@@ -35,7 +34,6 @@ static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 	dXx2 =  dx * 2;
 	dXx2_dYx2 = dXx2 - dy * 2;
 	error = dXx2 - dy;
-//	mlx_pixel_put(fdf->mlx, fdf->win, p0.x, p0.y, p0.color);
 	img_pixel_put(&fdf, p0);
 	while ( dy-- ) {
 		if ( error >= 0 )
@@ -47,7 +45,6 @@ static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 			error += dXx2;
 		p0.y++;
 		img_pixel_put(&fdf, p0);
-//		mlx_pixel_put(fdf->mlx, fdf->win, p0.x, p0.y, p0.color);
 	}
 }
 
@@ -59,7 +56,6 @@ static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 
 	err = dy_x2 - dx;
 	img_pixel_put(&fdf, p0);
-//	mlx_pixel_put(fdf->mlx, fdf->win, p0.x, p0.y, p0.color);
 	while (dx--)
 	{
 		if (err >= 0)
@@ -71,7 +67,6 @@ static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 			err += dy_x2;
 		p0.x += dir;
 		img_pixel_put(&fdf, p0);
-//		mlx_pixel_put(fdf->mlx, fdf->win, p0.x, p0.y, p0.color);
 	}
 }
 

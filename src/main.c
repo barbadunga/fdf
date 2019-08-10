@@ -21,7 +21,7 @@ int		main(int argc, char **argv)
 		return (-1);
 	if (!(map = read_map(argv[1])))
 		return (0);
-	fdf = fdf_init();
+	fdf = fdf_init(&map);
 	draw(fdf, map);
 	event_handler(fdf);
 	mlx_loop(fdf->mlx);

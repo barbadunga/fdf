@@ -21,11 +21,11 @@ int 		keyborad(int key, void	*param)
 		fdf = (t_fdf*)param;
 	return (1);
 }
+
 static int	mouse_press(int key, int x, int y, void *param)
 {
 	t_point	p;
 	t_point	p0;
-	static int i;
 	t_fdf	*fdf;
 
 	fdf  = (t_fdf*)param;
@@ -36,8 +36,10 @@ static int	mouse_press(int key, int x, int y, void *param)
 	p.color = 0xFF0000;
 	if (key == 1)
 		draw_line(fdf, p0, p);
+	if (key == 4 || key == 5)
+		zoom(fdf, key);
 	mlx_clear_window(fdf->mlx, fdf->win);
-	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, i++, 0);
+	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 	return (1);
 }
 

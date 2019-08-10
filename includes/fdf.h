@@ -20,9 +20,10 @@
 # include <unistd.h>
 
 # define ABS(n) (n > 0 ? n : -n)
+# define DEG2RAD(f) f * 3.14 / 180
 # define EXIT_BUTTON 17
-# define HEIGHT 640
-# define WIDTH 480
+# define WIDTH 640
+# define HEIGHT 480
 
 typedef struct	s_point
 {
@@ -31,6 +32,11 @@ typedef struct	s_point
 	int 	z;
 	int 	color;
 }				t_point;
+
+typedef struct	s_view
+{
+	int		zoom;
+}				t_view;
 
 typedef struct	s_map
 {
@@ -43,6 +49,7 @@ typedef struct	s_map
 typedef struct	s_fdf
 {
 	t_map	*map;
+	t_view	*view;
 	void	*win;
 	void	*mlx;
 	void	*img;
@@ -54,9 +61,12 @@ typedef struct	s_fdf
 
 void	draw_line(t_fdf *fdf, t_point p0, t_point p1);
 
-t_fdf	*fdf_init();
+t_fdf	*fdf_init(t_map **map);
 void	event_handler(t_fdf *fdf);
 t_map	*read_map(char *filename);
 void	draw(t_fdf *fdf, t_map *map);
-void	zoom(t_fdf *fdf);
+void	fill(t_fdf *fdf, int x, int y, int height, int width, int color);
+t_point	new_point(int x, int y, int z, int color);
+void	zoom(t_fdf *fdf, int key);
+
 #endif
