@@ -17,7 +17,7 @@
  * Need to catch all fails of allocation!
  */
 
-static int	ft_parse_line(t_vec **vec, t_map **map, char *line)
+static int	parse_line(t_vec **vec, t_map **map, char *line)
 {
 	char	**tab;
 	int		i;
@@ -86,7 +86,7 @@ t_map		*read_map(char *filename)
 		return (NULL);
 	while (get_next_line(fd, &line) > 0)
 	{
-		ft_parse_line(&vec, &map, line);
+		parse_line(&vec, &map, line);
 		map->n_rows++;
 	}
 	map->size = (int)vec->total;

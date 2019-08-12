@@ -14,6 +14,37 @@
 #include <math.h>
 #include <stdio.h>
 
+void	isometric(t_point *vertex)
+{
+	int		x;
+	int		y;
+
+	x = vertex->x;
+	y = vertex->y;
+
+	vertex->x = (int)((x - y) * cos(DEG2RAD(30)));
+	vertex->y = (int)( -vertex->z + (x + y) * sin(DEG2RAD(30)));
+}
+
+void	transform(t_fdf *fdf, t_point *vertex)
+{
+	int	i;
+
+	i = 0;
+	while (i < fdf->map->size)
+	{
+		vertex[i].x *= fdf->view->scale;
+		vertex[i].y *= fdf->view->scale;
+		vertex[i].z *= fdf->view->scale;
+		vertex[i].x += fdf->view->x_offset;
+		vertex[i].y += fdf->view->y_offset;
+		if (fdf->project)
+			isometric(&vertex[i]);
+		i++;
+	}
+	fdf->view->scale = 1;
+}
+
 void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 {
 	int *dat;
@@ -35,45 +66,38 @@ void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 void 	zoom(t_fdf *fdf, int key)
 {
 	if (key == 4)
-		fdf->view->zoom++;
+		fdf->view->scale++;
 	if (key == 5)
-		fdf->view->zoom--;
+		fdf->view->scale = fdf->view->scale > 1? fdf->view->scale - 1 : 1;
 }
 
-t_point	new_point(int x, int y, int z, int color)
+void	move(t_fdf *fdf, int key)
 {
-	t_point p;
-
-	p.x = x;
-	p.y = y;
-	if (z != 0)
-		color = 0x0000FF;
-	p.z = z;
-	p.color = color;
-	return (p);
+	if (key == 123)
+		fdf->view->y_offset = -5;
+	if (key == 124)
+		fdf->view->y_offset = 5;
+	if (key == 125)
+		fdf->view->x_offset = 5;
+	if (key == 126)
+		fdf->view->x_offset = -5;
 }
 
 void	draw(t_fdf *fdf, t_map *map)
 {
-	t_point	cur;
+	t_point *vertex;
 	int		i;
-	int		j;
 
 	i = 0;
-	while (i < map->n_rows)
+	vertex = fdf->vertex;
+	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
+	transform(fdf, vertex);
+	while (i < map->size)
 	{
-		j = 0;
-		while (j < map->n_cols)
-		{
-			cur = new_point(i, j, map->plane[i][j], 0xFF0000);
-			if (i + 1 < map->n_rows)
-				draw_line(fdf, cur,
-						new_point(i + 1, j, map->plane[i][j], cur.color));
-			if (j + 1 < map->n_cols)
-				draw_line(fdf, cur,
-						new_point(i, j + 1, map->plane[i][j], cur.color));
-			j++;
-		}
+		if (i % map->n_cols < map->n_cols - 1)
+			draw_line(fdf, vertex[i], vertex[i + 1]);
+		if (i < map->size - map->n_cols)
+			draw_line(fdf, vertex[i], vertex[i + map->n_cols]);
 		i++;
 	}
 	mlx_clear_window(fdf->mlx, fdf->win);

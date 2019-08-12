@@ -22,8 +22,8 @@
 # define ABS(n) (n > 0 ? n : -n)
 # define DEG2RAD(f) f * 3.14 / 180
 # define EXIT_BUTTON 17
-# define WIDTH 640
-# define HEIGHT 480
+# define WIDTH 1024
+# define HEIGHT 768
 
 typedef struct	s_point
 {
@@ -35,7 +35,9 @@ typedef struct	s_point
 
 typedef struct	s_view
 {
-	int		zoom;
+	int		scale;
+	int		x_offset;
+	int		y_offset;
 }				t_view;
 
 typedef struct	s_map
@@ -50,6 +52,8 @@ typedef struct	s_fdf
 {
 	t_map	*map;
 	t_view	*view;
+	t_point *vertex;
+	int		project;
 	void	*win;
 	void	*mlx;
 	void	*img;
@@ -68,5 +72,6 @@ void	draw(t_fdf *fdf, t_map *map);
 void	fill(t_fdf *fdf, int x, int y, int height, int width, int color);
 t_point	new_point(int x, int y, int z, int color);
 void	zoom(t_fdf *fdf, int key);
+void 	move(t_fdf *fdf, int key);
 
 #endif

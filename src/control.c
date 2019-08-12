@@ -13,33 +13,35 @@
 #include "fdf.h"
 #include <stdio.h>
 
+static int	close_window(void *param);
+
 int 		keyborad(int key, void	*param)
 {
 	t_fdf	*fdf;
 
-	if (key > 0)
-		fdf = (t_fdf*)param;
+	fdf = (t_fdf*)param;
+	printf("key[%d]\n", key);
+	if (key == 123 || key == 124 || key == 125 || key == 126)
+		move(fdf, key);
+	if (key == 34)
+		fdf->project = 1;
+	if (key == 53)
+		close_window(fdf);
+	draw(fdf, fdf->map);
 	return (1);
 }
 
 static int	mouse_press(int key, int x, int y, void *param)
 {
-	t_point	p;
-	t_point	p0;
 	t_fdf	*fdf;
 
 	fdf  = (t_fdf*)param;
-	p.x = y;
-	p.y = x;
-	p0.x = WIDTH / 2;
-	p0.y = HEIGHT / 2;
-	p.color = 0xFF0000;
-	if (key == 1)
-		draw_line(fdf, p0, p);
+	printf("mouse[%d]\n", key);
+	if (key == 1 || key == 2)
+		printf("(x: %d, y: %d)\n", x, y);
 	if (key == 4 || key == 5)
 		zoom(fdf, key);
-	mlx_clear_window(fdf->mlx, fdf->win);
-	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
+	draw(fdf, fdf->map);
 	return (1);
 }
 

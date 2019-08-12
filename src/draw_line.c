@@ -19,10 +19,13 @@ static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 
 	color = mlx_get_color_value((*fdf)->mlx, pixel.color);
 	i = (pixel.y * (*fdf)->bpp / 8) + (pixel.x * (*fdf)->size_line);
-	(*fdf)->data[i] = color;
-	(*fdf)->data[++i] = color >> (unsigned)8;
-	(*fdf)->data[++i] = color >> (unsigned)16;
-	(*fdf)->data[++i] = 0;
+	if (i >= 0)
+	{
+		(*fdf)->data[i] = color;
+		(*fdf)->data[++i] = color >> (unsigned)8;
+		(*fdf)->data[++i] = color >> (unsigned)16;
+		(*fdf)->data[++i] = 0;
+	}
 }
 
 static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)

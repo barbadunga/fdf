@@ -20,8 +20,9 @@ int		main(int argc, char **argv)
 	if (argc != 2)
 		return (-1);
 	if (!(map = read_map(argv[1])))
-		return (0);
-	fdf = fdf_init(&map);
+		return (-1);
+	if (!(fdf = fdf_init(&map)))
+		return (-1);
 	draw(fdf, map);
 	event_handler(fdf);
 	mlx_loop(fdf->mlx);
