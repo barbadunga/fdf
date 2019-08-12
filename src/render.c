@@ -22,8 +22,8 @@ void	isometric(t_point *vertex)
 	x = vertex->x;
 	y = vertex->y;
 
-	vertex->x = (int)((x - y) * cos(DEG2RAD(30)));
-	vertex->y = (int)( -vertex->z + (x + y) * sin(DEG2RAD(30)));
+	vertex->x = (int)((x + y) * cos(DEG2RAD(30)));
+	vertex->y = (int)( -vertex->z + (x - y) * sin(DEG2RAD(30)));
 }
 
 void	transform(t_fdf *fdf, t_point *vertex)
@@ -43,6 +43,9 @@ void	transform(t_fdf *fdf, t_point *vertex)
 		i++;
 	}
 	fdf->view->scale = 1;
+	fdf->view->x_offset = 0;
+	fdf->view->y_offset = 0;
+	fdf->project = 0;
 }
 
 void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
@@ -92,6 +95,7 @@ void	draw(t_fdf *fdf, t_map *map)
 	vertex = fdf->vertex;
 	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
 	transform(fdf, vertex);
+	printf("wtf\n");
 	while (i < map->size)
 	{
 		if (i % map->n_cols < map->n_cols - 1)

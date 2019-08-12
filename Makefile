@@ -16,7 +16,7 @@ CFLAGS = -Wall -Wextra -Werror
 LFLAGS = -L minilibx_macos -lmlx -L libft -lft -framework OpenGL -framework AppKit
 IFLAGS = -I includes/ -I minilibx_macos -I libft -I includes
 
-LIBFT_DIR = libft/
+LIBFT_DIR = Libft/
 LIBFT = $(LIBFT_DIR)
 
 SRC_DIR = src/
