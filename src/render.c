@@ -86,6 +86,14 @@ void	move(t_fdf *fdf, int key)
 		fdf->view->x_offset = -5;
 }
 
+
+t_point project(t_fdf *fdf, t_point vertex)
+{
+	vertex.x /= 1 - (vertex.z / 10);
+	vertex.y /= 1 - (vert)
+	return (vertex);
+}
+
 void	draw(t_fdf *fdf, t_map *map)
 {
 	t_point *vertex;
@@ -95,13 +103,12 @@ void	draw(t_fdf *fdf, t_map *map)
 	vertex = fdf->vertex;
 	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
 	transform(fdf, vertex);
-	printf("wtf\n");
 	while (i < map->size)
 	{
 		if (i % map->n_cols < map->n_cols - 1)
-			draw_line(fdf, vertex[i], vertex[i + 1]);
+			draw_line(fdf, project(fdf, vertex[i]), project(fdf, vertex[i + 1]));
 		if (i < map->size - map->n_cols)
-			draw_line(fdf, vertex[i], vertex[i + map->n_cols]);
+			draw_line(fdf, project(fdf, vertex[i]), project(fdf, vertex[i + map->n_cols]));
 		i++;
 	}
 	mlx_clear_window(fdf->mlx, fdf->win);
