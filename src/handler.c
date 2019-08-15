@@ -20,13 +20,20 @@ int 		keyborad(int key, void	*param)
 	t_fdf	*fdf;
 
 	fdf = (t_fdf*)param;
-	printf("key[%d]\n", key);
 	if (key == 123 || key == 124 || key == 125 || key == 126)
 		move(fdf, key);
 	if (key == 34)
 		fdf->project = 1;
 	if (key == 53)
 		close_window(fdf);
+	if (key == 6)
+		fdf->view->gamma = (fdf->view->gamma + 2) % 360;
+	if (key == 7)
+		fdf->view->alpha = (fdf->view->alpha + 2) % 360;
+	if (key == 16)
+		fdf->view->beta = (fdf->view->beta + 2) % 360;
+	if (key == 69)
+		fdf->view->scale -= fdf->view->scale == 1 ?  0.01f : 1;
 	draw(fdf, fdf->map);
 	return (1);
 }
@@ -36,7 +43,6 @@ static int	mouse_press(int key, int x, int y, void *param)
 	t_fdf	*fdf;
 
 	fdf  = (t_fdf*)param;
-	printf("mouse[%d]\n", key);
 	if (key == 1 || key == 2)
 		printf("(x: %d, y: %d)\n", x, y);
 	if (key == 4 || key == 5)

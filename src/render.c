@@ -26,28 +26,6 @@ void	isometric(t_point *vertex)
 	vertex->y = (int)( -vertex->z + (x - y) * sin(DEG2RAD(30)));
 }
 
-void	transform(t_fdf *fdf, t_point *vertex)
-{
-	int	i;
-
-	i = 0;
-	while (i < fdf->map->size)
-	{
-		vertex[i].x *= fdf->view->scale;
-		vertex[i].y *= fdf->view->scale;
-		vertex[i].z *= fdf->view->scale;
-		vertex[i].x += fdf->view->x_offset;
-		vertex[i].y += fdf->view->y_offset;
-		if (fdf->project)
-			isometric(&vertex[i]);
-		i++;
-	}
-	fdf->view->scale = 1;
-	fdf->view->x_offset = 0;
-	fdf->view->y_offset = 0;
-	fdf->project = 0;
-}
-
 void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 {
 	int *dat;
@@ -66,32 +44,24 @@ void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 	}
 }
 
-void 	zoom(t_fdf *fdf, int key)
-{
-	if (key == 4)
-		fdf->view->scale++;
-	if (key == 5)
-		fdf->view->scale = fdf->view->scale > 1? fdf->view->scale - 1 : 1;
-}
-
-void	move(t_fdf *fdf, int key)
-{
-	if (key == 123)
-		fdf->view->y_offset = -5;
-	if (key == 124)
-		fdf->view->y_offset = 5;
-	if (key == 125)
-		fdf->view->x_offset = 5;
-	if (key == 126)
-		fdf->view->x_offset = -5;
-}
-
-
 t_point project(t_fdf *fdf, t_point vertex)
 {
-	vertex.x /= 1 - (vertex.z / 10);
-	vertex.y /= 1 - (vert)
+	vertex.x = (int)(vertex.x * fdf->view->scale);
+	vertex.y = (int)(vertex.y * fdf->view->scale);
+	vertex.z = (int)(vertex.z * fdf->view->scale);
+	rotate_x(fdf, &vertex);
+	rotate_y(fdf, &vertex);
+	rotate_z(fdf, &vertex);
+	vertex.x += fdf->view->x_offset;
+	vertex.y += fdf->view->y_offset;
+	if (fdf->project)
+		isometric(&vertex);
 	return (vertex);
+}
+
+void	set_to_default(t_fdf *fdf)
+{
+	fdf->project = 0;
 }
 
 void	draw(t_fdf *fdf, t_map *map)
@@ -102,7 +72,6 @@ void	draw(t_fdf *fdf, t_map *map)
 	i = 0;
 	vertex = fdf->vertex;
 	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
-	transform(fdf, vertex);
 	while (i < map->size)
 	{
 		if (i % map->n_cols < map->n_cols - 1)
@@ -111,6 +80,7 @@ void	draw(t_fdf *fdf, t_map *map)
 			draw_line(fdf, project(fdf, vertex[i]), project(fdf, vertex[i + map->n_cols]));
 		i++;
 	}
+	set_to_default(fdf);
 	mlx_clear_window(fdf->mlx, fdf->win);
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 }

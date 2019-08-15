@@ -21,7 +21,7 @@ t_point	new_point(int x, int y, int z, int color)
 	p.y = y;
 	if (z != 0)
 		color = 0x0000FF;
-	p.z = z * 10;
+	p.z = z;
 	p.color = color;
 	return (p);
 }
@@ -68,7 +68,7 @@ t_fdf	*fdf_init(t_map	**map)
 	fdf->vertex = new_vertex_array(*map);
 	fdf->map = *map;
 	fdf->view = view;
-	fdf->view->scale = 1;
+	fdf->view->scale = 3;
 	fdf->view->x_offset = 0;
 	fdf->view->y_offset = 0;
 	fdf->project = 0;
