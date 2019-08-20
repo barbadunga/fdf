@@ -50,10 +50,27 @@ t_point *new_vertex_array(t_map *map)
 	return (vertex);
 }
 
+t_view	*new_view(int x, int y, int z)
+{
+	t_view	*view;
+
+	if (!(view = (t_view*)malloc(sizeof(t_view))))
+		return (NULL);
+	view->alpha = 0;
+	view->beta = 0;
+	view->gamma = 0;
+	view->scale = 1.0;
+	view->x_offset = 0;
+	view->y_offset = 0;
+	view->eye[0] = x;
+	view->eye[1] = y;
+	view->eye[2] = z;
+	return (view);
+}
+
 t_fdf	*fdf_init(t_map	**map)
 {
 	t_fdf	*fdf;
-	t_view	*view;
 
 	if (!(fdf = (t_fdf*)malloc(sizeof(t_fdf))))
 		return (NULL);
@@ -63,15 +80,11 @@ t_fdf	*fdf_init(t_map	**map)
 		return (NULL);
 	if (!(fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
 		return (NULL);
-	if (!(view = (t_view*)malloc(sizeof(t_view))))
+	if (!(fdf->view = new_view(0, 0, 0)))
 		return (NULL);
 	fdf->vertex = new_vertex_array(*map);
 	fdf->map = *map;
-	fdf->view = view;
-	fdf->view->scale = 3;
-	fdf->view->x_offset = 0;
-	fdf->view->y_offset = 0;
-	fdf->project = 0;
+	identity(fdf->project);
 	fdf->data = mlx_get_data_addr(fdf->img, &fdf->bpp, &fdf->size_line, &fdf->end);
 	return (fdf);
 }

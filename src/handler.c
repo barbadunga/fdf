@@ -23,7 +23,8 @@ int 		keyborad(int key, void	*param)
 	if (key == 123 || key == 124 || key == 125 || key == 126)
 		move(fdf, key);
 	if (key == 34)
-		fdf->project = 1;
+//		fdf->project = 1;
+		printf("SET ISO\n");
 	if (key == 53)
 		close_window(fdf);
 	if (key == 6)

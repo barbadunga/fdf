@@ -20,7 +20,7 @@ LIBFT_DIR = Libft/
 LIBFT = $(LIBFT_DIR)
 
 SRC_DIR = src/
-SRC_LST = main.c init.c controls.c draw_line.c read.c render.c handler.c
+SRC_LST = main.c init.c controls.c draw_line.c read.c render.c handler.c matrix.c
 SOURCES = $(addprefix $(SRC_DIR), $(SRC_LST))
 
 all: $(BIN) $(LIBFT)
