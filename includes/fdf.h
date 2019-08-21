@@ -90,10 +90,10 @@ void	rotate_x(t_fdf *fdf, t_point *vertex);
  */
 
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
-void		identity(double matrix[4][4]);
+void		identity(double matrix[4][4], double value);
 void		xrotate(double rot[4][4], double angle);
 void		yrotate(double rot[4][4], double angle);
 void		zrotate(double rot[4][4], double angle);
-void	print(double matrix[4][4]);
+void		print(double matrix[4][4]);
 
 #endif

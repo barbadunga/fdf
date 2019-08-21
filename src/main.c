@@ -15,8 +15,6 @@
 
 int		main(int argc, char **argv)
 {
-	double world2view[4][4];
-	double transform[4][4];
 	t_fdf	*fdf;
 	t_map	*map;
 
@@ -26,8 +24,6 @@ int		main(int argc, char **argv)
 		return (-1);
 	if (!(fdf = fdf_init(&map)))
 		return (-1);
-	identity(world2view);
-	identity(transform);
 	draw(fdf, map);
 	event_handler(fdf);
 	mlx_loop(fdf->mlx);

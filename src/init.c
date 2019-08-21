@@ -80,11 +80,11 @@ t_fdf	*fdf_init(t_map	**map)
 		return (NULL);
 	if (!(fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
 		return (NULL);
-	if (!(fdf->view = new_view(0, 0, 0)))
+	if (!(fdf->view = new_view(0, 0, 1)))
 		return (NULL);
 	fdf->vertex = new_vertex_array(*map);
 	fdf->map = *map;
-	identity(fdf->project);
+	identity(fdf->project, 1.0);
 	fdf->data = mlx_get_data_addr(fdf->img, &fdf->bpp, &fdf->size_line, &fdf->end);
 	return (fdf);
 }

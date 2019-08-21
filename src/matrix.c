@@ -13,7 +13,7 @@
 #include "fdf.h"
 #include <stdio.h>
 
-void	identity(double matrix[4][4])
+void	identity(double matrix[4][4], double value)
 {
 	int i;
 	int j;
@@ -25,7 +25,7 @@ void	identity(double matrix[4][4])
 		while (j < 4)
 		{
 			if (i == j)
-				matrix[i][j] = 1.0;
+				matrix[i][j] = value;
 			else
 				matrix[i][j] = 0.0;
 			j++;
@@ -34,14 +34,34 @@ void	identity(double matrix[4][4])
 	}
 }
 
-void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4])
+void		mtrxcpy(double src[4][4], double dest[4][4])
 {
 	int	i;
 	int	j;
-	int k;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			dest[i][j] = src[i][j];
+			j++;
+		}
+		i++;
+	}
+}
+
+void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4])
+{
+	double	tmp[4][4];
+	int		i;
+	int		j;
+	int		k;
 
 
 	i = 0;
+	identity(tmp, 0.0);
 	while (i < 4)
 	{
 		j = 0;
@@ -50,13 +70,14 @@ void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4])
 			k = 0;
 			while (k < 4)
 			{
-				res[i][j] += m1[i][k] * m2[k][j];
+				tmp[i][j] += m1[i][k] * m2[k][j];
 				k++;
 			}
 			j++;
 		}
 		i++;
 	}
+	mtrxcpy(tmp, res);
 }
 
 void		xrotate(double matrix[4][4], double angle)
@@ -65,7 +86,7 @@ void		xrotate(double matrix[4][4], double angle)
 	const double	sinus = sin(angle);
 	double			rot[4][4];
 
-	identity(rot);
+	identity(rot, 1.0);
 	rot[1][1] = cosinus;
 	rot[1][2] = -sinus;
 	rot[2][1] = sinus;
@@ -79,7 +100,7 @@ void		yrotate(double	matrix[4][4], double angle)
 	const double	sinus = sin(angle);
 	double			rot[4][4];
 
-	identity(rot);
+	identity(rot, 1.0);
 	rot[0][0] = cosinus;
 	rot[0][2] = sinus;
 	rot[2][0] = -sinus;
@@ -93,20 +114,12 @@ void		zrotate(double matrix[4][4], double angle)
 	const double	sinus = sin(angle);
 	double			rot[4][4];
 
-	identity(rot);
+	identity(rot, 1.0);
 	rot[0][0] = cosinus;
 	rot[0][1] = -sinus;
 	rot[1][0] = sinus;
 	rot[1][1] = cosinus;
 	concat_matrix(rot, matrix, matrix);
-}
-
-void		rotate(double res[4][4], double alpha, double beta, double gamma)
-{
-	double	tmp[4][4];
-
-	identity(tmp);
-	xrotate(tmp, alpha);
 }
 
 t_point		project(double matrix[4][4], t_point vertex)
@@ -132,9 +145,8 @@ t_point		project(double matrix[4][4], t_point vertex)
 		}
 		i++;
 	}
-//	printf("x: %f y: %f z: %f\n", res3d[0], res3d[1], res3d[2]);
-	vertex.x = ((int)(res3d[0] / res3d[3] * PROJECT_RATIO * (WIDTH / 2.0f) + 0.5)) + WIDTH / 2;
-	vertex.y = ((int)(res3d[1] / res3d[3] * PROJECT_RATIO * (HEIGHT / 2.0f) + 0.5)) + HEIGHT / 2;
+	vertex.x = (int)(res3d[0] / res3d[3]);
+	vertex.y = (int)(res3d[1] / res3d[3]);
 	return (vertex);
 }
 

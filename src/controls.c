@@ -30,7 +30,7 @@ void 	zoom(t_fdf *fdf, int key)
 	if (key == 4)
 		fdf->view->scale += 0.2f;
 	if (key == 5)
-		fdf->view->scale -= fdf->view <= 0 ? 0 : 0.2f;
+		fdf->view->scale -= fdf->view->scale <= 0 ? 0 : 0.2f;
 }
 
 void	rotate_z(t_fdf *fdf, t_point *vertex)

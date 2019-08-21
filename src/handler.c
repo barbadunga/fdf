@@ -28,13 +28,17 @@ int 		keyborad(int key, void	*param)
 	if (key == 53)
 		close_window(fdf);
 	if (key == 6)
-		fdf->view->gamma = (fdf->view->gamma + 2) % 360;
+		fdf->view->gamma = (fdf->view->gamma + 5) % 360;
 	if (key == 7)
-		fdf->view->alpha = (fdf->view->alpha + 2) % 360;
+		fdf->view->alpha = (fdf->view->alpha + 5) % 360;
 	if (key == 16)
-		fdf->view->beta = (fdf->view->beta + 2) % 360;
+		fdf->view->beta = (fdf->view->beta + 5) % 360;
 	if (key == 69)
 		fdf->view->scale -= fdf->view->scale == 1 ?  0.01f : 1;
+	if (key == 24)
+		fdf->view->eye[2] += 1;
+	if (key == 27)
+		fdf->view->eye[2] -= 1;
 	draw(fdf, fdf->map);
 	return (1);
 }

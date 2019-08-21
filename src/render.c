@@ -48,40 +48,54 @@ void	calculate_transform(double project[4][4], t_view *view)
 	double		scale[4][4];
 	double		translate[4][4];
 
-	identity(rot);
-	identity(scale);
-	identity(translate);
+	identity(rot, 1.0);
+	identity(scale, 1.0);
+	identity(translate, 1.0);
 	xrotate(rot, DEG2RAD(view->alpha));
 	yrotate(rot, DEG2RAD(view->beta));
 	zrotate(rot, DEG2RAD(view->gamma));
-	print(rot);
 	scale[0][0] = view->scale;
 	scale[1][1] = view->scale;
 	scale[2][2] = view->scale;
-	translate[0][3] = view->x_offset;
-	translate[1][3] = view->y_offset;
+//	translate[0][3] = view->x_offset;
+//	translate[1][3] = view->y_offset;
 	concat_matrix(scale, project, project);
 	concat_matrix(rot, project, project);
-	concat_matrix(translate, project, project);
+	project[0][3] = view->x_offset;
+	project[1][3] = view->y_offset;
+//	concat_matrix(translate, project, project);
 }
+
 
 void	draw(t_fdf *fdf, t_map *map)
 {
 	t_point *vertex;
+	t_point	*projected;
 	int		i;
 
 	i = 0;
 	vertex = fdf->vertex;
 	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
 	calculate_transform(fdf->project, fdf->view);
+	if (!(projected = (t_point*)malloc(sizeof(t_point) * map->size)))
+		return ;
+	while (i < map->size)
+	{
+		projected[i] = project(fdf->project, vertex[i]);
+		i++;
+	}
+	i = 0;
 	while (i < map->size)
 	{
 		if (i % map->n_cols < map->n_cols - 1)
-			draw_line(fdf, project(fdf->project, vertex[i]), project(fdf->project, vertex[i + 1]));
+//			draw_line(fdf, project(fdf->project, vertex[i]), project(fdf->project, vertex[i + 1]));
+			draw_line(fdf, projected[i], projected[i + 1]);
 		if (i < map->size - map->n_cols)
-			draw_line(fdf, project(fdf->project, vertex[i]), project(fdf->project, vertex[i + map->n_cols]));
+//			draw_line(fdf, project(fdf->project, vertex[i]), project(fdf->project, vertex[i + map->n_cols]));
+			draw_line(fdf, projected[i], projected[i + map->n_cols]);
 		i++;
 	}
+	identity(fdf->project, 1.0);
 	mlx_clear_window(fdf->mlx, fdf->win);
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 }
