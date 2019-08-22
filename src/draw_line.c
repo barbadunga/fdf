@@ -19,7 +19,7 @@ static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 
 	color = mlx_get_color_value((*fdf)->mlx, pixel.color);
 	i = (pixel.y * (*fdf)->bpp / 8) + (pixel.x * (*fdf)->size_line);
-	if (i >= 0)
+	if (i >= 0 && pixel.x > 0 && pixel.x < HEIGHT && pixel.y > 0 && pixel.y < WIDTH)
 	{
 		(*fdf)->data[i] = color;
 		(*fdf)->data[++i] = color >> (unsigned)8;

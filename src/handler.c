@@ -23,22 +23,29 @@ int 		keyborad(int key, void	*param)
 	if (key == 123 || key == 124 || key == 125 || key == 126)
 		move(fdf, key);
 	if (key == 34)
-//		fdf->project = 1;
-		printf("SET ISO\n");
+	{
+		identity(fdf->rotation, 1.0);
+		z_rotation(fdf->rotation, DEG2RAD(55));
+		y_rotation(fdf->rotation, DEG2RAD(30));
+	}
 	if (key == 53)
 		close_window(fdf);
-	if (key == 6)
-		fdf->view->gamma = (fdf->view->gamma + 5) % 360;
-	if (key == 7)
-		fdf->view->alpha = (fdf->view->alpha + 5) % 360;
-	if (key == 16)
-		fdf->view->beta = (fdf->view->beta + 5) % 360;
-	if (key == 69)
-		fdf->view->scale -= fdf->view->scale == 1 ?  0.01f : 1;
+	if (key == 0)
+		x_rotation(fdf->rotation, ROTATE_3);
+	if (key == 2)
+		x_rotation(fdf->rotation, -ROTATE_3);
+	if (key == 1)
+		y_rotation(fdf->rotation, ROTATE_3);
+	if (key == 13)
+		y_rotation(fdf->rotation, -ROTATE_3);
+	if (key == 12)
+		z_rotation(fdf->rotation, ROTATE_3);
+	if (key == 14)
+		z_rotation(fdf->rotation, -ROTATE_3);
 	if (key == 24)
-		fdf->view->eye[2] += 1;
+		fdf->scale += 0.1f;
 	if (key == 27)
-		fdf->view->eye[2] -= 1;
+		fdf->scale -= fdf->scale > 0.2 ? 0.1f : 0.0;
 	draw(fdf, fdf->map);
 	return (1);
 }

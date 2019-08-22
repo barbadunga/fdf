@@ -18,46 +18,40 @@
 # include "mlx.h"
 # include "libft.h"
 # include <unistd.h>
+#include <math.h>
 
 # define DEG2RAD(f) f * 3.14 / 180
+# define ROTATE_3 M_PI / 90
 # define EXIT_BUTTON 17
-# define WIDTH 800
-# define HEIGHT 800
-# define PROJECT_RATIO -2.0
+# define WIDTH 1920
+# define HEIGHT 1080
 
 typedef struct	s_point
 {
 	int		x;
 	int 	y;
 	int		z;
+	int		norm;
 	int 	color;
 }				t_point;
-
-typedef struct	s_view
-{
-	int		eye[3];
-	float	scale;
-	int		x_offset;
-	int		y_offset;
-	int		alpha;
-	int		beta;
-	int		gamma;
-}				t_view;
 
 typedef struct	s_map
 {
 	int		**plane;
-	int 	n_rows;
-	int 	n_cols;
+	int 	x_max;
+	int 	y_max;
+	int		z_max;
 	int		size;
 }				t_map;
 
 typedef struct	s_fdf
 {
 	t_map	*map;
-	t_view	*view;
 	t_point *vertex;
 	double	project[4][4];
+	double	rotation[4][4];
+	int		translate[3];
+	double	scale;
 	void	*win;
 	void	*mlx;
 	void	*img;
@@ -74,16 +68,16 @@ void		event_handler(t_fdf *fdf);
 t_map		*read_map(char *filename);
 void		draw(t_fdf *fdf, t_map *map);
 void		fill(t_fdf *fdf, int x, int y, int height, int width, int color);
-t_point		project(double matrix[4][4], t_point vertex);
+t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
 /*
  * Controls funcs
  */
 
 void	zoom(t_fdf *fdf, int key);
 void 	move(t_fdf *fdf, int key);
-void	rotate_z(t_fdf *fdf, t_point *vertex);
-void	rotate_y(t_fdf *fdf, t_point *vertex);
-void	rotate_x(t_fdf *fdf, t_point *vertex);
+void		x_rotation(double rot[4][4], double angle);
+void		y_rotation(double rot[4][4], double angle);
+void		z_rotation(double rot[4][4], double angle);
 
 /*
  * Matrix
@@ -91,9 +85,6 @@ void	rotate_x(t_fdf *fdf, t_point *vertex);
 
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
 void		identity(double matrix[4][4], double value);
-void		xrotate(double rot[4][4], double angle);
-void		yrotate(double rot[4][4], double angle);
-void		zrotate(double rot[4][4], double angle);
 void		print(double matrix[4][4]);
 
 #endif

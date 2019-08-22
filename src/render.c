@@ -42,30 +42,30 @@ void	print(double matrix[4][4])
 	}
 }
 
-void	calculate_transform(double project[4][4], t_view *view)
+void	calculate_transform(t_fdf *fdf, double	rot[4][4], double project[4][4])
 {
-	double		rot[4][4];
-	double		scale[4][4];
-	double		translate[4][4];
-
-	identity(rot, 1.0);
-	identity(scale, 1.0);
-	identity(translate, 1.0);
-	xrotate(rot, DEG2RAD(view->alpha));
-	yrotate(rot, DEG2RAD(view->beta));
-	zrotate(rot, DEG2RAD(view->gamma));
-	scale[0][0] = view->scale;
-	scale[1][1] = view->scale;
-	scale[2][2] = view->scale;
-//	translate[0][3] = view->x_offset;
-//	translate[1][3] = view->y_offset;
-	concat_matrix(scale, project, project);
+	project[0][0] *= fdf->scale;
+	project[1][1] *= fdf->scale;
+	project[2][2] *= fdf->scale;
 	concat_matrix(rot, project, project);
-	project[0][3] = view->x_offset;
-	project[1][3] = view->y_offset;
-//	concat_matrix(translate, project, project);
 }
 
+//int		norm_calc(t_point *vertex, int index, int size_len)
+//{
+//	double			a;
+//	double			b;
+//	double			c;
+//	const t_point	v1 = vertex[index];
+//	const t_point	v2 = vertex[index + 1];
+//	const t_point	v3 = vertex[index + 1 + size_len];
+//
+//	a = v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z);
+//	b = v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x);
+//	c = v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y);
+//	if (a < 0 || b < 0 || c < 0)
+//		return (0);
+//	return (1);
+//}
 
 void	draw(t_fdf *fdf, t_map *map)
 {
@@ -76,23 +76,21 @@ void	draw(t_fdf *fdf, t_map *map)
 	i = 0;
 	vertex = fdf->vertex;
 	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
-	calculate_transform(fdf->project, fdf->view);
+	calculate_transform(fdf, fdf->rotation, fdf->project);
 	if (!(projected = (t_point*)malloc(sizeof(t_point) * map->size)))
 		return ;
 	while (i < map->size)
 	{
-		projected[i] = project(fdf->project, vertex[i]);
+		projected[i] = project(fdf, fdf->project, vertex[i]);
 		i++;
 	}
 	i = 0;
 	while (i < map->size)
 	{
-		if (i % map->n_cols < map->n_cols - 1)
-//			draw_line(fdf, project(fdf->project, vertex[i]), project(fdf->project, vertex[i + 1]));
+		if (i % map->y_max < map->y_max - 1)
 			draw_line(fdf, projected[i], projected[i + 1]);
-		if (i < map->size - map->n_cols)
-//			draw_line(fdf, project(fdf->project, vertex[i]), project(fdf->project, vertex[i + map->n_cols]));
-			draw_line(fdf, projected[i], projected[i + map->n_cols]);
+		if (i < map->size - map->y_max)
+			draw_line(fdf, projected[i], projected[i + map->y_max]);
 		i++;
 	}
 	identity(fdf->project, 1.0);

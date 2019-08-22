@@ -80,49 +80,76 @@ void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4])
 	mtrxcpy(tmp, res);
 }
 
-void		xrotate(double matrix[4][4], double angle)
+void		x_rotation(double rot[4][4], double angle)
 {
-	const double	cosinus = cos(angle);
+	int				i;
+	double			tmp[3][3];
 	const double	sinus = sin(angle);
-	double			rot[4][4];
+	const double	cosinus = cos(angle);
 
-	identity(rot, 1.0);
-	rot[1][1] = cosinus;
-	rot[1][2] = -sinus;
-	rot[2][1] = sinus;
-	rot[2][2] = cosinus;
-	concat_matrix(rot, matrix, matrix);
+	i = 0;
+	while (i < 3)
+	{
+		tmp[1][i] = cosinus * rot[1][i] + -sinus * rot[2][i];
+		tmp[2][i] = sinus * rot[1][i] + cosinus * rot[2][i];
+		i++;
+	}
+	i = 0;
+	while (i < 3)
+	{
+		rot[1][i] = tmp[1][i];
+		rot[2][i] = tmp[2][i];
+		i++;
+	}
 }
 
-void		yrotate(double	matrix[4][4], double angle)
+void		y_rotation(double rot[4][4], double angle)
 {
-	const double	cosinus = cos(angle);
+	int				i;
+	double			tmp[3][3];
 	const double	sinus = sin(angle);
-	double			rot[4][4];
+	const double	cosinus = cos(angle);
 
-	identity(rot, 1.0);
-	rot[0][0] = cosinus;
-	rot[0][2] = sinus;
-	rot[2][0] = -sinus;
-	rot[2][2] = cosinus;
-	concat_matrix(rot, matrix, matrix);
+	i = 0;
+	while (i < 3)
+	{
+		tmp[0][i] = cosinus * rot[0][i] + sinus * rot[2][i];
+		tmp[2][i] = -sinus * rot[0][i] + cosinus * rot[2][i];
+		i++;
+	}
+	i = 0;
+	while (i < 3)
+	{
+		rot[0][i] = tmp[0][i];
+		rot[2][i] = tmp[2][i];
+		i++;
+	}
 }
 
-void		zrotate(double matrix[4][4], double angle)
+void		z_rotation(double rot[4][4], double angle)
 {
-	const double	cosinus = cos(angle);
+	int				i;
+	double			tmp[4][4];
 	const double	sinus = sin(angle);
-	double			rot[4][4];
+	const double	cosinus = cos(angle);
 
-	identity(rot, 1.0);
-	rot[0][0] = cosinus;
-	rot[0][1] = -sinus;
-	rot[1][0] = sinus;
-	rot[1][1] = cosinus;
-	concat_matrix(rot, matrix, matrix);
+	i = 0;
+	while (i < 3)
+	{
+		tmp[0][i] = cosinus * rot[0][i] + -sinus * rot[1][i];
+		tmp[1][i] = sinus * rot[0][i] + cosinus * rot[1][i];
+		i++;
+	}
+	i = 0;
+	while (i < 3)
+	{
+		rot[0][i] = tmp[0][i];
+		rot[1][i] = tmp[1][i];
+		i++;
+	}
 }
 
-t_point		project(double matrix[4][4], t_point vertex)
+t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex)
 {
 	double		vec3d[4];
 	double		res3d[4];
@@ -130,9 +157,9 @@ t_point		project(double matrix[4][4], t_point vertex)
 	int		j;
 
 	i = 0;
-	vec3d[0] = vertex.x;
-	vec3d[1] = vertex.y;
-	vec3d[2] = vertex.z;
+	vec3d[0] = (2.0 * vertex.x) / fdf->map->x_max - 1.0;
+	vec3d[1] = (2.0 * vertex.y) / fdf->map->y_max - 1.0;
+	vec3d[2] = (2.0 * vertex.z) / fdf->map->z_max - 1.0;
 	vec3d[3] = 1;
 	while (i < 4)
 	{
@@ -145,8 +172,10 @@ t_point		project(double matrix[4][4], t_point vertex)
 		}
 		i++;
 	}
-	vertex.x = (int)(res3d[0] / res3d[3]);
-	vertex.y = (int)(res3d[1] / res3d[3]);
+	vertex.x = (int)(res3d[0] * HEIGHT / 4.0 + HEIGHT / 2.0);
+	vertex.y = (int)(res3d[1] * WIDTH / 4.0 + WIDTH / 2.0);
+	vertex.x += fdf->translate[0];
+	vertex.y += fdf->translate[1];
 	return (vertex);
 }
 

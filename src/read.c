@@ -30,9 +30,11 @@ static int	parse_line(t_vec **vec, t_map **map, char *line)
 	{
 		val = ft_atoi(tab[i++]);
 		ft_vec_add(vec, &val);
+		if (val >= (*map)->z_max)
+			(*map)->z_max = val;
 	}
-	if (!(*map)->n_cols)
-		(*map)->n_cols = i;
+	if (!(*map)->y_max)
+		(*map)->y_max = i;
 	return (1);
 }
 
@@ -66,8 +68,9 @@ static t_map	*init_map(void)
 
 	if (!(map = (t_map*)malloc(sizeof(t_map))))
 		return (NULL);
-	map->n_cols = 0;
-	map->n_rows = 0;
+	map->y_max = 0;
+	map->x_max = 0;
+	map->z_max = 0;
 	return (map);
 }
 
@@ -87,10 +90,11 @@ t_map		*read_map(char *filename)
 	while (get_next_line(fd, &line) > 0)
 	{
 		parse_line(&vec, &map, line);
-		map->n_rows++;
+		map->x_max++;
 	}
 	map->size = (int)vec->total;
-	map->plane = create_plane(vec, map->n_rows, map->n_cols);
+	map->plane = create_plane(vec, map->x_max, map->y_max);
+	ft_putnbr(map->z_max);
 	ft_vec_del(&vec);
 	return (map);
 }
