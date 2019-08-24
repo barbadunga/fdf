@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
+void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 {
 	unsigned int	color;
 	int				i;
@@ -28,9 +28,26 @@ static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 	}
 }
 
-static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
+int			check_depth_y(t_point s, t_point c, t_point e)
+{
+	t_point	point;
+	double	z_val;
+	double tmp[3];
+	double	k;
+
+	k = e.y == s.y? 1.0 : (double)(c.y - s.y) / (double)(e.y - s.y);
+	point = new_point(e.x - s.x, e.y - s.y, e.z - s.z, s.color);
+	tmp[0] = point.x * k + s.x;
+	tmp[1] = point.y * k + s.y;
+	z_val = point.z * k + s.z;
+	return ((int)(z_val));
+}
+
+static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir, t_point end)
 {
 	int dXx2;
+	t_point	start = p0;
+	int z_val;
 	int dXx2_dYx2;
 	int error;
 
@@ -47,15 +64,37 @@ static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 		else
 			error += dXx2;
 		p0.y++;
-		img_pixel_put(&fdf, p0);
+		if ((z_val = check_depth_y(start, p0, end)) >= fdf->z_buffer[p0.x + p0.y * fdf->map->y_max])
+		{
+			fdf->z_buffer[p0.x + p0.y * fdf->map->y_max] = z_val;
+			img_pixel_put(&fdf, p0);
+		}
 	}
 }
 
-static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
+int			check_depth_x(t_point s, t_point c, t_point e)
 {
-	const int	dy_x2 = dy * 2;
-	const int	dy_x2_minus_dx_x2 = dy_x2 - dx * 2;
-	int			err;
+	t_point	point;
+	double	z_val;
+	double tmp[3];
+	double	k;
+
+	k = e.x == s.x ? 1.0 : (double)(c.x - s.x) / (double)(e.x - s.x);
+	point = new_point(e.x - s.x, e.y - s.y, e.z - s.z, s.color);
+	tmp[0] = point.x * k + s.x;
+	tmp[1] = point.y * k + s.y;
+	z_val = point.z * k + s.z;
+	return ((int)(z_val));
+}
+
+static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir, t_point end)
+{
+//	const t_point	start = p0;
+	end.x++;
+	const int		dy_x2 = dy * 2;
+	const int		dy_x2_minus_dx_x2 = dy_x2 - dx * 2;
+//	int				z_val;
+	int				err;
 
 	err = dy_x2 - dx;
 	img_pixel_put(&fdf, p0);
@@ -69,17 +108,26 @@ static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 		else
 			err += dy_x2;
 		p0.x += dir;
-		img_pixel_put(&fdf, p0);
+//		if ((z_val = check_depth_x(start, p0, end)) >= fdf->z_buffer[p0.x + p0.y * fdf->map->y_max])
+//		{
+//			fdf->z_buffer[p0.x + p0.y * fdf->map->y_max] = z_val;
+			img_pixel_put(&fdf, p0);
+//		}
 	}
 }
 
-void		ft_swap(int *p1, int *p2)
+void		swap_points(t_point *p1, t_point *p2)
 {
-	int	tmp;
+	t_point	tmp;
 
-	tmp = *p1;
-	*p1 = *p2;
-	*p2 = tmp;
+	tmp.x = p1->x;
+	tmp.y = p1->y;
+	tmp.z = p1->z;
+	tmp.color = p1->color;
+	p2->x = tmp.x;
+	p2->y = tmp.y;
+	p2->z = tmp.z;
+	p2->color = tmp.color;
 }
 
 void		draw_line(t_fdf *fdf, t_point p0, t_point p1)
@@ -88,18 +136,14 @@ void		draw_line(t_fdf *fdf, t_point p0, t_point p1)
 	int 	d_y;
 
 	if (p0.y > p1.y)
-	{
-		ft_swap(&p0.y, &p1.y);
-		ft_swap(&p0.x, &p1.x);
-	}
+		swap_points(&p0, &p1);
 	d_x = p1.x - p0.x;
 	d_y = p1.y - p0.y;
 	if (d_x > 0)
-		d_x > d_y ? octant0(fdf, p0, d_x, d_y, 1) : octant1(fdf, p0, d_x, d_y, 1);
+		d_x > d_y ? octant0(fdf, p0, d_x, d_y, 1, p1) : octant1(fdf, p0, d_x, d_y, 1, p1);
 	else
 	{
-
 		d_x = -d_x;
-		d_x > d_y ? octant0(fdf, p0, d_x, d_y, -1) : octant1(fdf, p0, d_x, d_y, -1);
+		d_x > d_y ? octant0(fdf, p0, d_x, d_y, -1, p1) : octant1(fdf, p0, d_x, d_y, -1, p1);
 	}
 }

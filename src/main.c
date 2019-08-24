@@ -24,6 +24,9 @@ int		main(int argc, char **argv)
 		return (-1);
 	if (!(fdf = fdf_init(&map)))
 		return (-1);
+	x_rotation(fdf->rotation, DEG2RAD(30));
+	y_rotation(fdf->rotation, DEG2RAD(45));
+	z_rotation(fdf->rotation, DEG2RAD(30));
 	draw(fdf, map);
 	event_handler(fdf);
 	mlx_loop(fdf->mlx);

@@ -18,6 +18,7 @@
 # include "mlx.h"
 # include "libft.h"
 # include <unistd.h>
+# include <limits.h>
 #include <math.h>
 
 # define DEG2RAD(f) f * 3.14 / 180
@@ -48,6 +49,7 @@ typedef struct	s_fdf
 {
 	t_map	*map;
 	t_point *vertex;
+	int		*z_buffer;
 	double	project[4][4];
 	double	rotation[4][4];
 	int		translate[3];
@@ -69,6 +71,9 @@ t_map		*read_map(char *filename);
 void		draw(t_fdf *fdf, t_map *map);
 void		fill(t_fdf *fdf, int x, int y, int height, int width, int color);
 t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
+t_point		new_point(int x, int y, int z, int color);
+void		img_pixel_put(t_fdf	**fdf, t_point	pixel);
+
 /*
  * Controls funcs
  */

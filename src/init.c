@@ -51,6 +51,19 @@ t_point *new_vertex_array(t_map *map)
 	return (vertex);
 }
 
+int 	*new_zbuffer(int size)
+{
+	int	*zbuf;
+	int i;
+
+	i = 0;
+	if (!(zbuf = (int*)malloc(sizeof(int) * size)))
+		return (NULL);
+	while (i < size)
+		zbuf[i++] = INT_MIN;
+	return (zbuf);
+}
+
 t_fdf	*fdf_init(t_map	**map)
 {
 	t_fdf	*fdf;
@@ -62,6 +75,8 @@ t_fdf	*fdf_init(t_map	**map)
 	if (!(fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FileDeFler")))
 		return (NULL);
 	if (!(fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
+		return (NULL);
+	if (!(fdf->z_buffer = new_zbuffer((*map)->size)))
 		return (NULL);
 	fdf->vertex = new_vertex_array(*map);
 	fdf->map = *map;
