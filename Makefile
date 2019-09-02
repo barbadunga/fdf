@@ -13,10 +13,10 @@
 BIN = fdf
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-LFLAGS = -L minilibx_macos -lmlx -L libft -lft -framework OpenGL -framework AppKit
-IFLAGS = -I includes/ -I minilibx_macos -I libft -I includes
+LFLAGS = -L minilibx_macos -lmlx -L ../Libft -lft -framework OpenGL -framework AppKit
+IFLAGS = -I includes/ -I minilibx_macos -I ../Libft -I includes
 
-LIBFT_DIR = Libft/
+LIBFT_DIR = ../Libft/
 LIBFT = $(LIBFT_DIR)
 
 SRC_DIR = src/

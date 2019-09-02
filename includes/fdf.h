@@ -16,15 +16,17 @@
 
 # include <math.h>
 # include "mlx.h"
+# include <stdlib.h>
 # include "libft.h"
 # include <unistd.h>
-#include <math.h>
+# include <limits.h>
+# include <math.h>
 
 # define DEG2RAD(f) f * 3.14 / 180
 # define ROTATE_3 M_PI / 90
 # define EXIT_BUTTON 17
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1440
+# define HEIGHT 800
 
 typedef struct	s_point
 {
@@ -48,6 +50,7 @@ typedef struct	s_fdf
 {
 	t_map	*map;
 	t_point *vertex;
+	int		*zbuffer;
 	double	project[4][4];
 	double	rotation[4][4];
 	int		translate[3];
@@ -83,6 +86,7 @@ void		z_rotation(double rot[4][4], double angle);
  * Matrix
  */
 
+void		rasterize(t_point p1, t_point p2, t_point p3, t_point p4);
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
 void		identity(double matrix[4][4], double value);
 void		print(double matrix[4][4]);

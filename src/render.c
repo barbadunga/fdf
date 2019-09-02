@@ -32,40 +32,14 @@ void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 	}
 }
 
-void	print(double matrix[4][4])
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-			printf("%f\t", matrix[i][j]);
-		printf("\n");
-	}
-}
-
 void	calculate_transform(t_fdf *fdf, double	rot[4][4], double project[4][4])
 {
 	project[0][0] *= fdf->scale;
 	project[1][1] *= fdf->scale;
 	project[2][2] *= fdf->scale;
+	project[3][2] = -140.0;
 	concat_matrix(rot, project, project);
 }
-
-//int		norm_calc(t_point *vertex, int index, int size_len)
-//{
-//	double			a;
-//	double			b;
-//	double			c;
-//	const t_point	v1 = vertex[index];
-//	const t_point	v2 = vertex[index + 1];
-//	const t_point	v3 = vertex[index + 1 + size_len];
-//
-//	a = v1.y * (v2.z - v3.z) + v2.y * (v3.z - v1.z) + v3.y * (v1.z - v2.z);
-//	b = v1.z * (v2.x - v3.x) + v2.z * (v3.x - v1.x) + v3.z * (v1.x - v2.x);
-//	c = v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y);
-//	if (a < 0 || b < 0 || c < 0)
-//		return (0);
-//	return (1);
-//}
 
 void	draw(t_fdf *fdf, t_map *map)
 {

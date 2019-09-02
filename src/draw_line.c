@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdio.h>
 
 static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 {
@@ -28,17 +29,16 @@ static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 	}
 }
 
-static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
+static void octant1(t_fdf *fdf, t_point p0, t_point delta, int dir)
 {
-	int dXx2;
-	int dXx2_dYx2;
-	int error;
+	const int		dXx2 = delta.x * 2;
+	const int		dXx2_dYx2 = dXx2 - delta.y * 2;
+	int				error;
 
-	dXx2 =  dx * 2;
-	dXx2_dYx2 = dXx2 - dy * 2;
-	error = dXx2 - dy;
+	error = dXx2 - delta.y;
 	img_pixel_put(&fdf, p0);
-	while ( dy-- ) {
+	while (delta.y--)
+	{
 		if ( error >= 0 )
 		{
 			p0.x += dir;
@@ -51,15 +51,15 @@ static void octant1(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 	}
 }
 
-static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
+static void	octant0(t_fdf *fdf, t_point p0, t_point delta, int dir)
 {
-	const int	dy_x2 = dy * 2;
-	const int	dy_x2_minus_dx_x2 = dy_x2 - dx * 2;
-	int			err;
+	const int		dy_x2 = delta.y * 2;
+	const int		dy_x2_minus_dx_x2 = dy_x2 - delta.x * 2;
+	int				err;
 
-	err = dy_x2 - dx;
+	err = dy_x2 - delta.x;
 	img_pixel_put(&fdf, p0);
-	while (dx--)
+	while (delta.x--)
 	{
 		if (err >= 0)
 		{
@@ -75,7 +75,7 @@ static void	octant0(t_fdf *fdf, t_point p0, int dx, int dy, int dir)
 
 void		ft_swap(int *p1, int *p2)
 {
-	int	tmp;
+	int tmp;
 
 	tmp = *p1;
 	*p1 = *p2;
@@ -84,22 +84,25 @@ void		ft_swap(int *p1, int *p2)
 
 void		draw_line(t_fdf *fdf, t_point p0, t_point p1)
 {
-	int		d_x;
-	int 	d_y;
+	t_point	delta;
 
 	if (p0.y > p1.y)
 	{
-		ft_swap(&p0.y, &p1.y);
 		ft_swap(&p0.x, &p1.x);
+		ft_swap(&p0.y, &p1.y);
+		ft_swap(&p0.z, &p1.z);
+		ft_swap(&p0.color, &p1.color);
 	}
-	d_x = p1.x - p0.x;
-	d_y = p1.y - p0.y;
-	if (d_x > 0)
-		d_x > d_y ? octant0(fdf, p0, d_x, d_y, 1) : octant1(fdf, p0, d_x, d_y, 1);
+	delta.x = p1.x - p0.x;
+	delta.y = p1.y - p0.y;
+	delta.z = p1.z - p0.z;
+	delta.color = p1.color;
+	if (delta.x > 0)
+		delta.x > delta.y ? octant0(fdf, p0, delta, 1) : octant1(fdf, p0, delta, 1);
 	else
 	{
 
-		d_x = -d_x;
-		d_x > d_y ? octant0(fdf, p0, d_x, d_y, -1) : octant1(fdf, p0, d_x, d_y, -1);
+		delta.x = -delta.x;
+		delta.x > delta.y ? octant0(fdf, p0, delta, -1) : octant1(fdf, p0, delta, -1);
 	}
 }

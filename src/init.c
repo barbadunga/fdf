@@ -12,6 +12,7 @@
 
 #include "fdf.h"
 #include "mlx.h"
+#include <limits.h>
 
 t_point	new_point(int x, int y, int z, int color)
 {
@@ -51,6 +52,18 @@ t_point *new_vertex_array(t_map *map)
 	return (vertex);
 }
 
+int		*new_zbuffer(int size)
+{
+	int	*zbuffer;
+	int	i;
+
+	i = 0;
+	if (!(zbuffer = (int*)malloc(sizeof(int) * size)))
+		return (NULL);
+	while (i < size)
+		zbuffer[i++] = INT_MIN;
+	return (zbuffer);
+}
 t_fdf	*fdf_init(t_map	**map)
 {
 	t_fdf	*fdf;
@@ -62,6 +75,8 @@ t_fdf	*fdf_init(t_map	**map)
 	if (!(fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FileDeFler")))
 		return (NULL);
 	if (!(fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
+		return (NULL);
+	if (!(fdf->zbuffer = new_zbuffer((*map)->size)))
 		return (NULL);
 	fdf->vertex = new_vertex_array(*map);
 	fdf->map = *map;

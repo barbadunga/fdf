@@ -94,7 +94,6 @@ t_map		*read_map(char *filename)
 	}
 	map->size = (int)vec->total;
 	map->plane = create_plane(vec, map->x_max, map->y_max);
-	ft_putnbr(map->z_max);
 	ft_vec_del(&vec);
 	return (map);
 }
