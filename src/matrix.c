@@ -177,7 +177,6 @@ t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex)
 //	res3d[2] /= res3d[3];
 //	vertex.x = (int)(res3d[0] / (res3d[2] ? res3d[2] : 1.0) * HEIGHT / 4.0 + HEIGHT / 2.0);
 //	vertex.y = (int)(res3d[1] / (res3d[2] ? res3d[2] : 1.0) * WIDTH / 4.0 + WIDTH / 2.0);
-
 	vertex.x = (int)(res3d[0] * HEIGHT / 4.0 + HEIGHT / 2.0);
 	vertex.y = (int)(res3d[1] * WIDTH / 4.0 + WIDTH / 2.0);
 	vertex.x += fdf->translate[0];

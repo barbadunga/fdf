@@ -72,6 +72,7 @@ t_map		*read_map(char *filename);
 void		draw(t_fdf *fdf, t_map *map);
 void		fill(t_fdf *fdf, int x, int y, int height, int width, int color);
 t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
+
 /*
  * Controls funcs
  */
@@ -90,5 +91,11 @@ void		rasterize(t_point p1, t_point p2, t_point p3, t_point p4);
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
 void		identity(double matrix[4][4], double value);
 void		print(double matrix[4][4]);
+
+/*
+ * Color
+ */
+
+t_point		interpolate(t_point point, t_point delta);
 
 #endif
