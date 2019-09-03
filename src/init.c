@@ -14,17 +14,19 @@
 #include "mlx.h"
 #include <limits.h>
 
-t_point	new_point(int x, int y, int z, int color)
+t_point	new_point(int x, int y, int z, t_map *map)
 {
 	t_point p;
 
 	p.x = x;
 	p.y = y;
-	if (z != 0)
-		color = 0x0000FF;
 	p.z = z;
-	p.norm = 0;
-	p.color = color;
+	if (p.z < (map->z_max - map->z_min) / 4)
+		p.color = BOTTOM;
+	else if (p.z > ((map->z_max - map->z_min) * 3) / 4)
+		p.color = TOP;
+	else
+		p.color = MID;
 	return (p);
 }
 
@@ -44,7 +46,7 @@ t_point *new_vertex_array(t_map *map)
 		y = 0;
 		while (y < map->y_max)
 		{
-			vertex[x * map->y_max + y] = new_point(x, y, data[x][y], 0xFF0000);
+			vertex[x * map->y_max + y] = new_point(x, y, data[x][y], map);
 			y++;
 		}
 		x++;

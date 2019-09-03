@@ -49,19 +49,21 @@ int 		keyborad(int key, void	*param)
 	draw(fdf, fdf->map);
 	return (1);
 }
-
-static int	mouse_press(int key, int x, int y, void *param)
-{
-	t_fdf	*fdf;
-
-	fdf  = (t_fdf*)param;
-	if (key == 1 || key == 2)
-		printf("(x: %d, y: %d)\n", x, y);
-	if (key == 4 || key == 5)
-		zoom(fdf, key);
-	draw(fdf, fdf->map);
-	return (1);
-}
+/*
+ * DELETE DIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+//static int	mouse_press(int key, int x, int y, void *param)
+//{
+//	t_fdf	*fdf;
+//
+//	fdf  = (t_fdf*)param;
+//	if (key == 1 || key == 2)
+//		printf("(x: %d, y: %d)\n", x, y);
+//	if (key == 4 || key == 5)
+//		zoom(fdf, key);
+//	draw(fdf, fdf->map);
+//	return (1);
+//}
 
 static int	close_window(void *param)
 {
@@ -76,5 +78,5 @@ void		event_handler(t_fdf *fdf)
 {
 	mlx_hook(fdf->win, EXIT_BUTTON, 1LU << (unsigned)17, close_window, fdf);
 	mlx_hook(fdf->win, 2, 0, keyborad, fdf);
-	mlx_hook(fdf->win, 4, 0, mouse_press, fdf);
+//	mlx_hook(fdf->win, 4, 0, mouse_press, fdf);
 }

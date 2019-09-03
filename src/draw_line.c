@@ -11,25 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
-
-
-unsigned int			change_color(unsigned int cur, unsigned int end, unsigned int steps)
-{
-	unsigned char	rgb[3];
-	unsigned int	shift;
-	int				i;
-
-	shift = steps;
-	i = 0;
-	while (i <= 16)
-	{
-		rgb[i] = ((end >> shift) & 0xFFu - (cur >> shift) & 0xFFu) / steps;
-		shift += 8;
-		i++;
-	}
-	return (shift);
-}
 
 static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 {
@@ -52,10 +33,12 @@ static void octant1(t_fdf *fdf, t_point p0, t_point delta, int dir)
 	const t_point	start = p0;
 	const int		dXx2 = delta.x * 2;
 	const int		dXx2_dYx2 = dXx2 - delta.y * 2;
+	int				i;
 	int				error;
 
+	i = 0;
 	error = dXx2 - delta.y;
-	while (delta.y--)
+	while (i++ <= delta.y)
 	{
 		img_pixel_put(&fdf, p0);
 		if ( error >= 0 )
@@ -66,7 +49,7 @@ static void octant1(t_fdf *fdf, t_point p0, t_point delta, int dir)
 		else
 			error += dXx2;
 		p0.y++;
-		p0.color = change_color(p0.color, delta.color, start.y);
+		p0.color = linear_gradient(start.color, delta.y ? (double)i / delta.y : 1.0, delta.color);
 	}
 }
 
@@ -75,10 +58,12 @@ static void	octant0(t_fdf *fdf, t_point p0, t_point delta, int dir)
 	const t_point	start = p0;
 	const int		dYx2 = delta.y * 2;
 	const int		dYx2_dXx2 = dYx2 - delta.x * 2;
+	int				i;
 	int				err;
 
 	err = dYx2 - delta.x;
-	while (delta.x--)
+	i = 0;
+	while (i++ <= delta.x)
 	{
 		img_pixel_put(&fdf, p0);
 		if (err >= 0)
@@ -89,7 +74,7 @@ static void	octant0(t_fdf *fdf, t_point p0, t_point delta, int dir)
 		else
 			err += dYx2;
 		p0.x += dir;
-		p0.color = change_color(p0.color, delta.color, p0.x - start.x / start.x);
+		p0.color = linear_gradient(start.color, delta.x ? (double)i / delta.x : 1.0, delta.color);
 	}
 }
 

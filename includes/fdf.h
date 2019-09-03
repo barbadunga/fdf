@@ -22,18 +22,24 @@
 # include <limits.h>
 # include <math.h>
 
-# define DEG2RAD(f) f * 3.14 / 180
-# define ROTATE_3 M_PI / 90
-# define EXIT_BUTTON 17
-# define WIDTH 1440
-# define HEIGHT 800
+/*
+ * COLORS
+ */
+# define BOTTOM			0x00416A
+# define TOP			0xFFE000
+# define MID			0x799F0C
+
+# define DEG2RAD(f)		f * 3.14 / 180
+# define ROTATE_3		M_PI / 90
+# define EXIT_BUTTON	17
+# define WIDTH			1440
+# define HEIGHT			900
 
 typedef struct	s_point
 {
 	int		x;
 	int 	y;
 	int		z;
-	int		norm;
 	int 	color;
 }				t_point;
 
@@ -43,6 +49,7 @@ typedef struct	s_map
 	int 	x_max;
 	int 	y_max;
 	int		z_max;
+	int		z_min;
 	int		size;
 }				t_map;
 
@@ -96,6 +103,6 @@ void		print(double matrix[4][4]);
  * Color
  */
 
-t_point		interpolate(t_point point, t_point delta);
+int		linear_gradient(unsigned int start, double position, unsigned int end);
 
 #endif

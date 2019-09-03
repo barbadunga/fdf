@@ -6,7 +6,7 @@
 #    By: mshagga <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/25 16:54:34 by mshagga           #+#    #+#              #
-#    Updated: 2019/07/26 13:42:29 by mshagga          ###   ########.fr        #
+#    Updated: 2019/09/03 11:55:12 by mshagga          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,13 +19,23 @@ IFLAGS = -I includes/ -I minilibx_macos -I ./Libft -I includes
 LIBFT_DIR = ./Libft/
 LIBFT = $(LIBFT_DIR)
 
+INC = includes/fdf.h
 SRC_DIR = src/
-SRC_LST = main.c init.c controls.c draw_line.c read.c render.c handler.c matrix.c
+SRC_LST = main.c		\
+		  init.c		\
+		  controls.c	\
+		  draw_line.c	\
+		  read.c		\
+		  render.c		\
+		  handler.c		\
+		  matrix.c		\
+		  colors.c		\
+
 SOURCES = $(addprefix $(SRC_DIR), $(SRC_LST))
 
 all: $(BIN) $(LIBFT)
 
-$(BIN): $(LIBFT) $(SOURCES)
+$(BIN): $(LIBFT) $(SOURCES) $(INC)
 	make -C $(LIBFT_DIR)
 	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) $(IFLAGS) -o $(BIN)
 

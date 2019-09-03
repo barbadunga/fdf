@@ -32,6 +32,8 @@ static int	parse_line(t_vec **vec, t_map **map, char *line)
 		ft_vec_add(vec, &val);
 		if (val >= (*map)->z_max)
 			(*map)->z_max = val;
+		if (val <= (*map)->z_min)
+			(*map)->z_min = val;
 	}
 	if (!(*map)->y_max)
 		(*map)->y_max = i;
@@ -70,7 +72,8 @@ static t_map	*init_map(void)
 		return (NULL);
 	map->y_max = 0;
 	map->x_max = 0;
-	map->z_max = 0;
+	map->z_max = INT_MIN;
+	map->z_min = INT_MAX;
 	return (map);
 }
 

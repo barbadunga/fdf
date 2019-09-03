@@ -37,7 +37,7 @@ void	calculate_transform(t_fdf *fdf, double	rot[4][4], double project[4][4])
 	project[0][0] *= fdf->scale;
 	project[1][1] *= fdf->scale;
 	project[2][2] *= fdf->scale;
-	project[3][2] = -140.0;
+	project[3][2] = 1 / -140.0;
 	concat_matrix(rot, project, project);
 }
 
