@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
 
 void	move(t_fdf *fdf, int key)
 {
@@ -25,10 +24,26 @@ void	move(t_fdf *fdf, int key)
 		fdf->translate[0] -= 5;
 }
 
-void 	zoom(t_fdf *fdf, int key)
+void	rotate(t_fdf *fdf, int key)
 {
-	if (key == 4)
-		fdf->translate[2] += 3;
-	if (key == 5)
-		fdf->translate[2] -= fdf->translate[2] <= 1 ? 3 : 0;
+	if (key == 0)
+		x_rotation(fdf->rotation, ROTATE_3);
+	if (key == 2)
+		x_rotation(fdf->rotation, -ROTATE_3);
+	if (key == 1)
+		y_rotation(fdf->rotation, ROTATE_3);
+	if (key == 13)
+		y_rotation(fdf->rotation, -ROTATE_3);
+	if (key == 12)
+		z_rotation(fdf->rotation, ROTATE_3);
+	if (key == 14)
+		z_rotation(fdf->rotation, -ROTATE_3);
+}
+
+void	scale(t_fdf *fdf, int key)
+{
+	if (key == 47)
+		fdf->del += 0.1;
+	else if (key == 43)
+		fdf->del -= fdf->del < 0.1 ? 0.0 : 0.1;
 }

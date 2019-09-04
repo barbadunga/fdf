@@ -11,21 +11,20 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include "mlx.h"
-#include <limits.h>
 
 t_point	new_point(int x, int y, int z, t_map *map)
 {
-	t_point p;
+	t_point		p;
 
 	p.x = x;
 	p.y = y;
 	p.z = z;
-	if (p.z < (map->z_max - map->z_min) / 4)
+	p.color = (int)(map->plane[x][y] >> 32);
+	if (!p.color && p.z < (map->z_max - map->z_min) / 4)
 		p.color = BOTTOM;
-	else if (p.z > ((map->z_max - map->z_min) * 3) / 4)
+	else if (!p.color && p.z > ((map->z_max - map->z_min) * 3) / 4)
 		p.color = TOP;
-	else
+	else if (!p.color)
 		p.color = MID;
 	return (p);
 }
@@ -33,7 +32,7 @@ t_point	new_point(int x, int y, int z, t_map *map)
 t_point *new_vertex_array(t_map *map)
 {
 	t_point *vertex = NULL;
-	int		**data;
+	size_t	**data;
 	int		x;
 	int		y;
 
@@ -85,6 +84,7 @@ t_fdf	*fdf_init(t_map	**map)
 	identity(fdf->project, 1.0);
 	identity(fdf->rotation, 1.0);
 	fdf->scale = 1;
+	fdf->del = 1.0;
 	fdf->translate[0] = 0;
 	fdf->translate[1] = 0;
 	fdf->translate[2] = 10;

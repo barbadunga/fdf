@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "fdf.h"
-#include <stdio.h>
 
 int		linear_gradient(unsigned int start, double position, unsigned int end)
 {

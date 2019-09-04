@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
 
 void	identity(double matrix[4][4], double value)
 {
@@ -172,15 +171,9 @@ t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex)
 		}
 		i++;
 	}
-	res3d[0] /= res3d[3];
-	res3d[1] /= res3d[3];
-	res3d[2] /= res3d[3];
-	vertex.x = (int)(res3d[0] / (res3d[2] ? res3d[2] : 0.0000001) * HEIGHT / 4.0 + HEIGHT / 2.0);
-	vertex.y = (int)(res3d[1] / (res3d[2] ? res3d[2] : 0.0000001) * WIDTH / 4.0 + WIDTH / 2.0);
-//	vertex.x = (int)(res3d[0] * HEIGHT / 4.0 + HEIGHT / 2.0);
-//	vertex.y = (int)(res3d[1] * WIDTH / 4.0 + WIDTH / 2.0);
+	vertex.x = (int)(res3d[0] * HEIGHT / 4.0 + HEIGHT / 2.0);
+	vertex.y = (int)(res3d[1] * WIDTH / 4.0 + WIDTH / 2.0);
 	vertex.x += fdf->translate[0];
 	vertex.y += fdf->translate[1];
 	return (vertex);
 }
-

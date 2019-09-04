@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <fcntl.h>
 
 /*
  * Need to catch all fails of allocation!
@@ -21,42 +20,43 @@ static int	parse_line(t_vec **vec, t_map **map, char *line)
 {
 	char	**tab;
 	int		i;
-	int		val;
+	size_t	val;
 
 	i = 0;
 	if (!(tab = ft_strsplit(line, ' ')))
 		return (-1);
 	while (tab[i])
 	{
-		val = ft_atoi(tab[i++]);
+		val = get_hex(tab[i]) << 32u | ft_atoi(tab[i]);
 		ft_vec_add(vec, &val);
-		if (val >= (*map)->z_max)
+		if ((int)val >= (*map)->z_max)
 			(*map)->z_max = val;
-		if (val <= (*map)->z_min)
+		if ((int)val <= (*map)->z_min)
 			(*map)->z_min = val;
+		i++;
 	}
 	if (!(*map)->y_max)
 		(*map)->y_max = i;
 	return (1);
 }
 
-static int		**create_plane(t_vec *vec, int rows, int cols)
+static size_t		**create_plane(t_vec *vec, int rows, int cols)
 {
-	int	**plane;
-	int	i;
-	int j;
+	size_t	**plane;
+	int		i;
+	int		j;
 
 	i = 0;
-	if (!(plane = (int**)malloc(sizeof(int*) * rows)))
+	if (!(plane = (size_t **)malloc(sizeof(size_t *) * rows)))
 		return (NULL);
 	while (i < rows)
 	{
 		j = 0;
-		if (!(plane[i] = (int*)malloc(sizeof(int) * cols)))
+		if (!(plane[i] = (size_t *)malloc(sizeof(size_t) * cols)))
 			return (NULL);
 		while (j < cols)
 		{
-			plane[i][j] = ((int *)vec->data)[i * cols + j + 1];
+			plane[i][j] = ((size_t*)vec->data)[i * cols + j];
 			j++;
 		}
 		i++;
@@ -84,15 +84,18 @@ t_map		*read_map(char *filename)
 	char	*line;
 	int		fd;
 
-	if ((fd = open(filename, O_RDONLY)) < 0)
+	if ((fd = open(filename, O_RDONLY)) < 0 || read(fd, NULL, 0) < 0)
 		return (NULL);
 	if (!(map = init_map()))
 		return (NULL);
-	if (!(vec = ft_vec_init(8, sizeof(int))))
+	if (!(vec = ft_vec_init(8, sizeof(size_t))))
+	{
+		free(map);
 		return (NULL);
+	}
 	while (get_next_line(fd, &line) > 0)
 	{
-		parse_line(&vec, &map, line);
+		parse_line(&vec, &map, line);;
 		map->x_max++;
 	}
 	map->size = (int)vec->total;

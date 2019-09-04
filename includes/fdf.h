@@ -20,7 +20,7 @@
 # include "libft.h"
 # include <unistd.h>
 # include <limits.h>
-# include <math.h>
+# include <fcntl.h>
 
 /*
  * COLORS
@@ -45,7 +45,7 @@ typedef struct	s_point
 
 typedef struct	s_map
 {
-	int		**plane;
+	size_t	**plane;
 	int 	x_max;
 	int 	y_max;
 	int		z_max;
@@ -61,6 +61,7 @@ typedef struct	s_fdf
 	double	project[4][4];
 	double	rotation[4][4];
 	int		translate[3];
+	double	del;
 	double	scale;
 	void	*win;
 	void	*mlx;
@@ -71,8 +72,6 @@ typedef struct	s_fdf
 	int 	end;
 }				t_fdf;
 
-void		draw_line(t_fdf *fdf, t_point p0, t_point p1);
-
 t_fdf		*fdf_init(t_map **map);
 void		event_handler(t_fdf *fdf);
 t_map		*read_map(char *filename);
@@ -81,23 +80,34 @@ void		fill(t_fdf *fdf, int x, int y, int height, int width, int color);
 t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
 
 /*
- * Controls funcs
+ * Utility function's
  */
 
-void	zoom(t_fdf *fdf, int key);
-void 	move(t_fdf *fdf, int key);
+void		swap_points(t_point *p1, t_point *p2);
+void		sort_points(t_point	*p0, t_point *p1, t_point *p2);
+void		draw_line(t_fdf *fdf, t_point p0, t_point p1);
+t_point		new_point(int x, int y, int z, t_map *map);
+size_t		get_hex(char *hex);
+
+/*
+ * Controls function's
+ */
+
+void		zoom(t_fdf *fdf, int key);
+void 		move(t_fdf *fdf, int key);
+void		rotate(t_fdf *fdf, int key);
+void		scale(t_fdf *fdf, int key);
 void		x_rotation(double rot[4][4], double angle);
 void		y_rotation(double rot[4][4], double angle);
 void		z_rotation(double rot[4][4], double angle);
+int			close_window(void *param);
 
 /*
  * Matrix
  */
 
-void		rasterize(t_point p1, t_point p2, t_point p3, t_point p4);
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
 void		identity(double matrix[4][4], double value);
-void		print(double matrix[4][4]);
 
 /*
  * Color

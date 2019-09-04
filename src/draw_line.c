@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-static void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
+void	img_pixel_put(t_fdf	**fdf, t_point	pixel)
 {
 	unsigned int	color;
 	int				i;
@@ -49,7 +49,8 @@ static void octant1(t_fdf *fdf, t_point p0, t_point delta, int dir)
 		else
 			error += dXx2;
 		p0.y++;
-		p0.color = linear_gradient(start.color, delta.y ? (double)i / delta.y : 1.0, delta.color);
+		p0.color = linear_gradient(start.color,
+				delta.y ? (double)i / delta.y : 1.0, delta.color);
 	}
 }
 
@@ -74,17 +75,9 @@ static void	octant0(t_fdf *fdf, t_point p0, t_point delta, int dir)
 		else
 			err += dYx2;
 		p0.x += dir;
-		p0.color = linear_gradient(start.color, delta.x ? (double)i / delta.x : 1.0, delta.color);
+		p0.color = linear_gradient(start.color,
+				delta.x ? (double)i / delta.x : 1.0, delta.color);
 	}
-}
-
-void		ft_swap(int *p1, int *p2)
-{
-	int tmp;
-
-	tmp = *p1;
-	*p1 = *p2;
-	*p2 = tmp;
 }
 
 void		draw_line(t_fdf *fdf, t_point p0, t_point p1)
@@ -92,12 +85,7 @@ void		draw_line(t_fdf *fdf, t_point p0, t_point p1)
 	t_point	delta;
 
 	if (p0.y > p1.y)
-	{
-		ft_swap(&p0.x, &p1.x);
-		ft_swap(&p0.y, &p1.y);
-		ft_swap(&p0.z, &p1.z);
-		ft_swap(&p0.color, &p1.color);
-	}
+		swap_points(&p0, &p1);
 	delta.x = p1.x - p0.x;
 	delta.y = p1.y - p0.y;
 	delta.z = p1.z - p0.z;
@@ -106,7 +94,6 @@ void		draw_line(t_fdf *fdf, t_point p0, t_point p1)
 		delta.x > delta.y ? octant0(fdf, p0, delta, 1) : octant1(fdf, p0, delta, 1);
 	else
 	{
-
 		delta.x = -delta.x;
 		delta.x > delta.y ? octant0(fdf, p0, delta, -1) : octant1(fdf, p0, delta, -1);
 	}

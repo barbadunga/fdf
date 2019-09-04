@@ -24,12 +24,13 @@ SRC_DIR = src/
 SRC_LST = main.c		\
 		  init.c		\
 		  controls.c	\
-		  draw_line.c	\
 		  read.c		\
 		  render.c		\
 		  handler.c		\
 		  matrix.c		\
 		  colors.c		\
+		  utils.c       \
+		  draw_line.c   \
 
 SOURCES = $(addprefix $(SRC_DIR), $(SRC_LST))
 
