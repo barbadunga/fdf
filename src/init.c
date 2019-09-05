@@ -14,20 +14,19 @@
 
 t_point	new_point(int x, int y, int z, t_map *map)
 {
-	t_point		p;
+	t_point	p;
 
 	p.x = x;
 	p.y = y;
 	p.z = z;
-//	p.color = (int)(map->plane[x][y] >> 32) ? (int)(map->plane[x][y] >> 32) : 0xFFFFFF;
 	if (!(p.color = (int)(map->plane[x][y] >> 32)))
 		p.color = 0xFFFFFF;
 	return (p);
 }
 
-t_point *new_vertex_array(t_map *map)
+t_point	*new_vertex_array(t_map *map)
 {
-	t_point *vertex = NULL;
+	t_point *vertex;
 	size_t	**data;
 	int		x;
 	int		y;
@@ -51,8 +50,8 @@ t_point *new_vertex_array(t_map *map)
 
 int		*new_zbuffer(int size)
 {
-	int	*zbuffer;
-	int	i;
+	int		*zbuffer;
+	int		i;
 
 	i = 0;
 	if (!(zbuffer = (int*)malloc(sizeof(int) * size)))
@@ -61,7 +60,8 @@ int		*new_zbuffer(int size)
 		zbuffer[i++] = INT_MIN;
 	return (zbuffer);
 }
-t_fdf	*fdf_init(t_map	**map)
+
+t_fdf	*fdf_init(t_map **map)
 {
 	t_fdf	*fdf;
 
@@ -77,13 +77,14 @@ t_fdf	*fdf_init(t_map	**map)
 		return (NULL);
 	fdf->vertex = new_vertex_array(*map);
 	fdf->map = *map;
-	identity(fdf->project, 1.0);
-	identity(fdf->rotation, 1.0);
+	diagonalize(fdf->project, 1.0);
+	diagonalize(fdf->rotation, 1.0);
 	fdf->scale = 1;
 	fdf->del = 1.0;
 	fdf->translate[0] = 0;
 	fdf->translate[1] = 0;
 	fdf->translate[2] = 10;
-	fdf->data = mlx_get_data_addr(fdf->img, &fdf->bpp, &fdf->size_line, &fdf->end);
+	fdf->data = mlx_get_data_addr(fdf->img, &fdf->bpp,
+			&fdf->size_line, &fdf->end);
 	return (fdf);
 }

@@ -25,6 +25,7 @@
 /*
  * COLORS
  */
+
 # define BOTTOM			0x00416A
 # define TOP			0xFFE000
 # define MID			0x799F0C
@@ -78,6 +79,7 @@ t_map		*read_map(char *filename);
 void		draw(t_fdf *fdf, t_map *map);
 void		fill(t_fdf *fdf, int x, int y, int height, int width, int color);
 t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
+void		img_pixel_put(t_fdf **fdf, t_point pixel);
 
 /*
  * Utility function's
@@ -93,7 +95,6 @@ size_t		get_hex(char *hex);
  * Controls function's
  */
 
-void		zoom(t_fdf *fdf, int key);
 void 		move(t_fdf *fdf, int key);
 void		rotate(t_fdf *fdf, int key);
 void		scale(t_fdf *fdf, int key);
@@ -107,12 +108,13 @@ int			close_window(void *param);
  */
 
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
-void		identity(double matrix[4][4], double value);
+void		diagonalize(double matrix[4][4], double value);
 
 /*
  * Color
  */
 
-int		linear_gradient(unsigned int start, double position, unsigned int end);
+int			linear_gradient(unsigned int start, double position, unsigned int end);
+void		colorize(t_fdf *fdf);
 
 #endif

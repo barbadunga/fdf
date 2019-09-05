@@ -18,7 +18,10 @@ int		main(int argc, char **argv)
 	t_map	*map;
 
 	if (argc != 2)
+	{
+		ft_putendl("usage: ./fdf [file]");
 		return (-1);
+	}
 	if (!(map = read_map(argv[1])))
 		exit(1);
 	if (!(fdf = fdf_init(&map)))

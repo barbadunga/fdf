@@ -29,3 +29,22 @@ int		linear_gradient(unsigned int start, double position, unsigned int end)
 	}
 	return (rgb[2] << 16 | rgb[1] << 8 | rgb[0]);
 }
+
+void	colorize(t_fdf *fdf)
+{
+	int		i;
+	t_point	*p;
+
+	i = 0;
+	while (i < fdf->map->size)
+	{
+		p = fdf->vertex + i;
+		if (p->z < (fdf->map->z_max - fdf->map->z_min) / 4)
+			p->color = BOTTOM;
+		else if (p->z > ((fdf->map->z_max - fdf->map->z_min) * 3) / 4)
+			p->color = TOP;
+		else
+			p->color = MID;
+		i++;
+	}
+}

@@ -12,10 +12,10 @@
 
 #include "fdf.h"
 
-void	identity(double matrix[4][4], double value)
+void	diagonalize(double matrix[4][4], double value)
 {
-	int i;
-	int j;
+	int		i;
+	int		j;
 
 	i = 0;
 	while (i < 4)
@@ -35,8 +35,8 @@ void	identity(double matrix[4][4], double value)
 
 void		mtrxcpy(double src[4][4], double dest[4][4])
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	i = 0;
 	while (i < 4)
@@ -58,9 +58,8 @@ void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4])
 	int		j;
 	int		k;
 
-
 	i = 0;
-	identity(tmp, 0.0);
+	diagonalize(tmp, 0.0);
 	while (i < 4)
 	{
 		j = 0;
@@ -152,24 +151,20 @@ t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex)
 {
 	double		vec3d[4];
 	double		res3d[4];
-	int		i;
-	int		j;
+	int			i;
+	int			j;
 
-	i = 0;
+	i = -1;
 	vec3d[0] = (2.0 * vertex.x) / fdf->map->x_max - 1.0;
 	vec3d[1] = (2.0 * vertex.y) / fdf->map->y_max - 1.0;
 	vec3d[2] = (2.0 * vertex.z) / fdf->map->z_max - 1.0;
 	vec3d[3] = 1;
-	while (i < 4)
+	while (i++ < 4)
 	{
 		res3d[i] = 0;
-		j = 0;
-		while (j < 4)
-		{
+		j = -1;
+		while (j++ < 4)
 			res3d[i] += matrix[i][j] * vec3d[j];
-			j++;
-		}
-		i++;
 	}
 	vertex.x = (int)(res3d[0] * HEIGHT / 4.0 + HEIGHT / 2.0);
 	vertex.y = (int)(res3d[1] * WIDTH / 4.0 + WIDTH / 2.0);

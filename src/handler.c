@@ -11,26 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
-
-void		colorize(t_fdf *fdf)
-{
-	int		i;
-	t_point	*p;
-
-	i = 0;
-	while (i < fdf->map->size)
-	{
-		p = fdf->vertex + i;
-		if (p->z < (fdf->map->z_max - fdf->map->z_min) / 4)
-			p->color = BOTTOM;
-		else if (p->z > ((fdf->map->z_max - fdf->map->z_min) * 3) / 4)
-			p->color = TOP;
-		else
-			p->color = MID;
-		i++;
-	}
-}
 
 void		parallel(t_fdf *fdf)
 {
@@ -38,8 +18,8 @@ void		parallel(t_fdf *fdf)
 
 	i = 0;
 	fdf->scale = 1.0;
-	identity(fdf->rotation, 1.0);
-	identity(fdf->project, 1.0);
+	diagonalize(fdf->rotation, 1.0);
+	diagonalize(fdf->project, 1.0);
 	while (i < 3)
 		fdf->translate[i++] = 0;
 }
@@ -50,14 +30,14 @@ void		isometric(t_fdf *fdf)
 
 	i = 0;
 	fdf->scale = 1.0;
-	identity(fdf->rotation, 1.0);
+	diagonalize(fdf->rotation, 1.0);
 	y_rotation(fdf->rotation, DEG2RAD(45));
 	z_rotation(fdf->rotation, DEG2RAD(30));
 	while (i < 3)
 		fdf->translate[i++] = 0;
 }
 
-int 		keyborad(int key, void	*param)
+int			keyborad(int key, void *param)
 {
 	t_fdf	*fdf;
 

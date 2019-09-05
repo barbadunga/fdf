@@ -12,10 +12,6 @@
 
 #include "fdf.h"
 
-/*
- * Need to catch all fails of allocation!
- */
-
 static int	parse_line(t_vec **vec, t_map **map, char *line)
 {
 	char	**tab;
@@ -40,7 +36,7 @@ static int	parse_line(t_vec **vec, t_map **map, char *line)
 	return (1);
 }
 
-static size_t		**create_plane(t_vec *vec, int rows, int cols)
+static size_t		**new_mesh(t_vec *vec, int rows, int cols)
 {
 	size_t	**plane;
 	int		i;
@@ -95,11 +91,11 @@ t_map		*read_map(char *filename)
 	}
 	while (get_next_line(fd, &line) > 0)
 	{
-		parse_line(&vec, &map, line);;
+		parse_line(&vec, &map, line);
 		map->x_max++;
 	}
 	map->size = (int)vec->total;
-	map->plane = create_plane(vec, map->x_max, map->y_max);
+	map->plane = new_mesh(vec, map->x_max, map->y_max);
 	ft_vec_del(&vec);
 	return (map);
 }

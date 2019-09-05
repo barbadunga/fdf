@@ -30,7 +30,7 @@ void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
 	}
 }
 
-void	calculate_transform(t_fdf *fdf, double	rot[4][4], double project[4][4])
+void	calculate_transform(t_fdf *fdf, double rot[4][4], double project[4][4])
 {
 	project[0][0] *= fdf->scale;
 	project[1][1] *= fdf->scale;
@@ -65,7 +65,7 @@ void	draw(t_fdf *fdf, t_map *map)
 			draw_line(fdf, projected[i], projected[i + map->y_max]);
 		i++;
 	}
-	identity(fdf->project, 1.0);
+	diagonalize(fdf->project, 1.0);
 	mlx_clear_window(fdf->mlx, fdf->win);
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 }
