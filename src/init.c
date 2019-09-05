@@ -19,13 +19,9 @@ t_point	new_point(int x, int y, int z, t_map *map)
 	p.x = x;
 	p.y = y;
 	p.z = z;
-	p.color = (int)(map->plane[x][y] >> 32);
-	if (!p.color && p.z < (map->z_max - map->z_min) / 4)
-		p.color = BOTTOM;
-	else if (!p.color && p.z > ((map->z_max - map->z_min) * 3) / 4)
-		p.color = TOP;
-	else if (!p.color)
-		p.color = MID;
+//	p.color = (int)(map->plane[x][y] >> 32) ? (int)(map->plane[x][y] >> 32) : 0xFFFFFF;
+	if (!(p.color = (int)(map->plane[x][y] >> 32)))
+		p.color = 0xFFFFFF;
 	return (p);
 }
 

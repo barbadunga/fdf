@@ -11,6 +11,26 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdio.h>
+
+void		colorize(t_fdf *fdf)
+{
+	int		i;
+	t_point	*p;
+
+	i = 0;
+	while (i < fdf->map->size)
+	{
+		p = fdf->vertex + i;
+		if (p->z < (fdf->map->z_max - fdf->map->z_min) / 4)
+			p->color = BOTTOM;
+		else if (p->z > ((fdf->map->z_max - fdf->map->z_min) * 3) / 4)
+			p->color = TOP;
+		else
+			p->color = MID;
+		i++;
+	}
+}
 
 void		parallel(t_fdf *fdf)
 {
@@ -42,6 +62,8 @@ int 		keyborad(int key, void	*param)
 	t_fdf	*fdf;
 
 	fdf = (t_fdf*)param;
+	if (key == 8)
+		colorize(fdf);
 	if (key == 123 || key == 124 || key == 125 || key == 126)
 		move(fdf, key);
 	if (key == 35)
