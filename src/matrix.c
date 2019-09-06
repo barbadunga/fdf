@@ -12,45 +12,6 @@
 
 #include "fdf.h"
 
-void	diagonalize(double matrix[4][4], double value)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < 4)
-	{
-		j = 0;
-		while (j < 4)
-		{
-			if (i == j)
-				matrix[i][j] = value;
-			else
-				matrix[i][j] = 0.0;
-			j++;
-		}
-		i++;
-	}
-}
-
-void		mtrxcpy(double src[4][4], double dest[4][4])
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < 4)
-	{
-		j = 0;
-		while (j < 4)
-		{
-			dest[i][j] = src[i][j];
-			j++;
-		}
-		i++;
-	}
-}
-
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4])
 {
 	double	tmp[4][4];

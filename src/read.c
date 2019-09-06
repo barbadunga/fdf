@@ -12,7 +12,15 @@
 
 #include "fdf.h"
 
-static int	parse_line(t_vec **vec, t_map **map, char *line)
+void	clear_map(t_map **map, t_vec **vec)
+{
+	if (vec)
+		ft_vec_del(vec);
+	free(*map);
+	exit(-1);
+}
+
+int		parse_line(t_vec **vec, t_map **map, char *line)
 {
 	char	**tab;
 	int		i;
@@ -24,19 +32,22 @@ static int	parse_line(t_vec **vec, t_map **map, char *line)
 	while (tab[i])
 	{
 		val = get_hex(tab[i]) << 32u | ft_atoi(tab[i]);
-		ft_vec_add(vec, &val);
+		if (!ft_vec_add(vec, &val))
+			return (-1);
 		if ((int)val >= (*map)->z_max)
 			(*map)->z_max = val;
 		if ((int)val <= (*map)->z_min)
 			(*map)->z_min = val;
+		ft_strdel(&tab[i]);
 		i++;
 	}
+	free(tab);
 	if (!(*map)->y_max)
 		(*map)->y_max = i;
 	return (1);
 }
 
-static size_t		**new_mesh(t_vec *vec, int rows, int cols)
+size_t	**new_mesh(t_vec *vec, int rows, int cols)
 {
 	size_t	**plane;
 	int		i;
@@ -49,7 +60,12 @@ static size_t		**new_mesh(t_vec *vec, int rows, int cols)
 	{
 		j = 0;
 		if (!(plane[i] = (size_t *)malloc(sizeof(size_t) * cols)))
+		{
+			while (i > 0)
+				free(plane + i--);
+			free(plane);
 			return (NULL);
+		}
 		while (j < cols)
 		{
 			plane[i][j] = ((size_t*)vec->data)[i * cols + j];
@@ -60,9 +76,9 @@ static size_t		**new_mesh(t_vec *vec, int rows, int cols)
 	return (plane);
 }
 
-static t_map	*init_map(void)
+t_map	*init_map(void)
 {
-	t_map *map;
+	t_map	*map;
 
 	if (!(map = (t_map*)malloc(sizeof(t_map))))
 		return (NULL);
@@ -73,7 +89,7 @@ static t_map	*init_map(void)
 	return (map);
 }
 
-t_map		*read_map(char *filename)
+t_map	*read_map(char *filename)
 {
 	t_map	*map;
 	t_vec	*vec;
@@ -85,17 +101,17 @@ t_map		*read_map(char *filename)
 	if (!(map = init_map()))
 		return (NULL);
 	if (!(vec = ft_vec_init(8, sizeof(size_t))))
-	{
-		free(map);
-		return (NULL);
-	}
+		clear_map(&map, NULL);
 	while (get_next_line(fd, &line) > 0)
 	{
-		parse_line(&vec, &map, line);
+		if (parse_line(&vec, &map, line) < 0)
+			clear_map(&map, &vec);
+		free(line);
 		map->x_max++;
 	}
 	map->size = (int)vec->total;
-	map->plane = new_mesh(vec, map->x_max, map->y_max);
+	if (!(map->mesh = new_mesh(vec, map->x_max, map->y_max)))
+		clear_map(&map, &vec);
 	ft_vec_del(&vec);
 	return (map);
 }

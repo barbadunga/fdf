@@ -12,6 +12,17 @@
 
 #include "fdf.h"
 
+void	clear_all(t_fdf **fdf, t_map **map)
+{
+	if (fdf)
+	{
+		free(*fdf);
+		free((*fdf)->vertex);
+	}
+	free((*map)->mesh);
+	free(*map);
+}
+
 t_point	new_point(int x, int y, int z, t_map *map)
 {
 	t_point	p;
@@ -19,7 +30,7 @@ t_point	new_point(int x, int y, int z, t_map *map)
 	p.x = x;
 	p.y = y;
 	p.z = z;
-	if (!(p.color = (int)(map->plane[x][y] >> 32)))
+	if (map && !(p.color = (int)(map->mesh[x][y] >> 32)))
 		p.color = 0xFFFFFF;
 	return (p);
 }
@@ -34,7 +45,7 @@ t_point	*new_vertex_array(t_map *map)
 	if (!(vertex = (t_point*)malloc(sizeof(t_point) * map->size)))
 		return (NULL);
 	x = 0;
-	data = map->plane;
+	data = map->mesh;
 	while (x < map->x_max)
 	{
 		y = 0;
@@ -66,16 +77,17 @@ t_fdf	*fdf_init(t_map **map)
 	t_fdf	*fdf;
 
 	if (!(fdf = (t_fdf*)malloc(sizeof(t_fdf))))
-		return (NULL);
+		clear_all(NULL, map);
 	if (!(fdf->mlx = mlx_init()))
-		return (NULL);
+		clear_all(&fdf, map);
 	if (!(fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FileDeFler")))
-		return (NULL);
+		clear_all(&fdf, map);
 	if (!(fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
-		return (NULL);
+		clear_all(&fdf, map);
 	if (!(fdf->zbuffer = new_zbuffer((*map)->size)))
 		return (NULL);
-	fdf->vertex = new_vertex_array(*map);
+	if (!(fdf->vertex = new_vertex_array(*map)))
+		clear_all(&fdf, map);
 	fdf->map = *map;
 	diagonalize(fdf->project, 1.0);
 	diagonalize(fdf->rotation, 1.0);

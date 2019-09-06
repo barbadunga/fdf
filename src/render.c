@@ -12,21 +12,22 @@
 
 #include "fdf.h"
 
-void	fill(t_fdf *fdf, int x, int y, int height, int width, int color)
+void	fill(t_fdf *fdf, t_point p, int height, int width)
 {
-	int *dat;
-	int	start;
+	int			*dat;
+	const int	color = 0;
+	int			start;
 
-	start = y;
+	start = p.y;
 	dat = (int *)fdf->data;
-	height += x;
-	width += y;
-	while (x < height && x < HEIGHT)
+	height += p.x;
+	width += p.y;
+	while (p.x < height && p.x < HEIGHT)
 	{
-		y = start;
-		while (y < width && y < WIDTH)
-			dat[x * WIDTH + y++] = color;
-		x++;
+		p.y = start;
+		while (p.y < width && p.y < WIDTH)
+			dat[p.x * WIDTH + p.y++] = color;
+		p.x++;
 	}
 }
 
@@ -42,27 +43,20 @@ void	calculate_transform(t_fdf *fdf, double rot[4][4], double project[4][4])
 void	draw(t_fdf *fdf, t_map *map)
 {
 	t_point *vertex;
-	t_point	*projected;
 	int		i;
 
 	i = 0;
 	vertex = fdf->vertex;
-	fill(fdf, 0, 0, HEIGHT, WIDTH, 0);
+	fill(fdf, new_point(0, 0, 0, NULL), HEIGHT, WIDTH);
 	calculate_transform(fdf, fdf->rotation, fdf->project);
-	if (!(projected = (t_point*)malloc(sizeof(t_point) * map->size)))
-		return ;
-	while (i < map->size)
-	{
-		projected[i] = project(fdf, fdf->project, vertex[i]);
-		i++;
-	}
-	i = 0;
 	while (i < map->size)
 	{
 		if (i % map->y_max < map->y_max - 1)
-			draw_line(fdf, projected[i], projected[i + 1]);
+			draw_line(fdf, project(fdf, fdf->project, vertex[i]),
+					project(fdf, fdf->project, vertex[i + 1]));
 		if (i < map->size - map->y_max)
-			draw_line(fdf, projected[i], projected[i + map->y_max]);
+			draw_line(fdf, project(fdf, fdf->project, vertex[i]),
+					project(fdf, fdf->project, vertex[i + map->y_max]));
 		i++;
 	}
 	diagonalize(fdf->project, 1.0);

@@ -46,7 +46,7 @@ typedef struct	s_point
 
 typedef struct	s_map
 {
-	size_t	**plane;
+	size_t	**mesh;
 	int 	x_max;
 	int 	y_max;
 	int		z_max;
@@ -56,9 +56,9 @@ typedef struct	s_map
 
 typedef struct	s_fdf
 {
-	t_map	*map;
-	t_point *vertex;
-	int		*zbuffer;
+	t_map	*map; // alloc
+	t_point *vertex; // alloc
+	int		*zbuffer; // alloc
 	double	project[4][4];
 	double	rotation[4][4];
 	int		translate[3];
@@ -77,7 +77,7 @@ t_fdf		*fdf_init(t_map **map);
 void		event_handler(t_fdf *fdf);
 t_map		*read_map(char *filename);
 void		draw(t_fdf *fdf, t_map *map);
-void		fill(t_fdf *fdf, int x, int y, int height, int width, int color);
+void		fill(t_fdf *fdf, t_point p, int height, int width);
 t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
 void		img_pixel_put(t_fdf **fdf, t_point pixel);
 
@@ -109,7 +109,7 @@ int			close_window(void *param);
 
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
 void		diagonalize(double matrix[4][4], double value);
-
+void		mtrxcpy(double src[4][4], double dest[4][4]);
 /*
  * Color
  */

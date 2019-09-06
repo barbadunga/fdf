@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-void		sort_points(t_point *p0, t_point *p1, t_point *p2)
+void	sort_points(t_point *p0, t_point *p1, t_point *p2)
 {
 	if (p0->y == p1->y && p0->y == p2->y)
 		return ;
@@ -24,7 +24,7 @@ void		sort_points(t_point *p0, t_point *p1, t_point *p2)
 		swap_points(p1, p2);
 }
 
-void		swap_points(t_point *p1, t_point *p2)
+void	swap_points(t_point *p1, t_point *p2)
 {
 	t_point	tmp;
 
@@ -42,7 +42,7 @@ void		swap_points(t_point *p1, t_point *p2)
 	p1->color = tmp.color;
 }
 
-size_t		get_hex(char *hex)
+size_t	get_hex(char *hex)
 {
 	uint32_t	val;
 	uint8_t		byte;
@@ -62,4 +62,43 @@ size_t		get_hex(char *hex)
 		val = (val << 4u) | byte;
 	}
 	return ((size_t)val);
+}
+
+void	diagonalize(double matrix[4][4], double value)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			if (i == j)
+				matrix[i][j] = value;
+			else
+				matrix[i][j] = 0.0;
+			j++;
+		}
+		i++;
+	}
+}
+
+void	mtrxcpy(double src[4][4], double dest[4][4])
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			dest[i][j] = src[i][j];
+			j++;
+		}
+		i++;
+	}
 }

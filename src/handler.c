@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdio.h>
 
 void		parallel(t_fdf *fdf)
 {
@@ -67,9 +68,17 @@ int			keyborad(int key, void *param)
 int			close_window(void *param)
 {
 	t_fdf	*fdf;
+	int		i;
 
+	i = 0;
 	fdf = (t_fdf*)param;
 	mlx_destroy_window(fdf->mlx, fdf->win);
+	free(fdf->vertex);
+	while (i < fdf->map->x_max)
+		free(fdf->map->mesh[i++]);
+	free(fdf->map->mesh);
+	free(fdf->map);
+	free(fdf);
 	exit(0);
 }
 
