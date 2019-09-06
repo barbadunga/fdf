@@ -31,34 +31,44 @@ void	fill(t_fdf *fdf, t_point p, int height, int width)
 	}
 }
 
-void	calculate_transform(t_fdf *fdf, double rot[4][4], double project[4][4])
+t_point	*project_vertex(t_fdf *fdf, int size)
 {
-	project[0][0] *= fdf->scale;
-	project[1][1] *= fdf->scale;
-	project[2][2] *= fdf->scale;
-	project[2][2] *= fdf->del;
-	concat_matrix(rot, project, project);
+	t_point	*projected;
+	int		i;
+
+	if (!(projected = (t_point*)malloc(sizeof(t_point) * size)))
+		return (NULL);
+	fdf->project[0][0] *= fdf->scale;
+	fdf->project[1][1] *= fdf->scale;
+	fdf->project[2][2] *= fdf->scale;
+	fdf->project[2][2] *= fdf->del;
+	concat_matrix(fdf->rotation, fdf->project, fdf->project);
+	i = 0;
+	while (i < size)
+	{
+		projected[i] = project(fdf, fdf->project, fdf->vertex[i]);
+		i++;
+	}
+	return (projected);
 }
 
 void	draw(t_fdf *fdf, t_map *map)
 {
-	t_point *vertex;
+	t_point	*projected;
 	int		i;
 
 	i = 0;
-	vertex = fdf->vertex;
 	fill(fdf, new_point(0, 0, 0, NULL), HEIGHT, WIDTH);
-	calculate_transform(fdf, fdf->rotation, fdf->project);
+	projected = project_vertex(fdf, fdf->map->size);
 	while (i < map->size)
 	{
 		if (i % map->y_max < map->y_max - 1)
-			draw_line(fdf, project(fdf, fdf->project, vertex[i]),
-					project(fdf, fdf->project, vertex[i + 1]));
+			draw_line(fdf, projected[i], projected[i + 1]);
 		if (i < map->size - map->y_max)
-			draw_line(fdf, project(fdf, fdf->project, vertex[i]),
-					project(fdf, fdf->project, vertex[i + map->y_max]));
+			draw_line(fdf, projected[i], projected[i + map->y_max]);
 		i++;
 	}
+	free(projected);
 	diagonalize(fdf->project, 1.0);
 	mlx_clear_window(fdf->mlx, fdf->win);
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);

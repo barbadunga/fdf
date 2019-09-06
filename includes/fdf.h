@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #ifndef FDF_H
 # define FDF_H
 
@@ -21,10 +20,6 @@
 # include <unistd.h>
 # include <limits.h>
 # include <fcntl.h>
-
-/*
- * COLORS
- */
 
 # define BOTTOM			0x00416A
 # define TOP			0xFFE000
@@ -38,17 +33,17 @@
 
 typedef struct	s_point
 {
-	int		x;
-	int 	y;
-	int		z;
-	int 	color;
+	int	x;
+	int y;
+	int	z;
+	int color;
 }				t_point;
 
 typedef struct	s_map
 {
 	size_t	**mesh;
-	int 	x_max;
-	int 	y_max;
+	int		x_max;
+	int		y_max;
 	int		z_max;
 	int		z_min;
 	int		size;
@@ -56,9 +51,9 @@ typedef struct	s_map
 
 typedef struct	s_fdf
 {
-	t_map	*map; // alloc
-	t_point *vertex; // alloc
-	int		*zbuffer; // alloc
+	t_map	*map;
+	t_point	*vertex;
+	int		*zbuffer;
 	double	project[4][4];
 	double	rotation[4][4];
 	int		translate[3];
@@ -70,7 +65,7 @@ typedef struct	s_fdf
 	char	*data;
 	int		size_line;
 	int		bpp;
-	int 	end;
+	int		end;
 }				t_fdf;
 
 t_fdf		*fdf_init(t_map **map);
@@ -81,21 +76,13 @@ void		fill(t_fdf *fdf, t_point p, int height, int width);
 t_point		project(t_fdf *fdf, double matrix[4][4], t_point vertex);
 void		img_pixel_put(t_fdf **fdf, t_point pixel);
 
-/*
- * Utility function's
- */
-
 void		swap_points(t_point *p1, t_point *p2);
 void		sort_points(t_point	*p0, t_point *p1, t_point *p2);
 void		draw_line(t_fdf *fdf, t_point p0, t_point p1);
 t_point		new_point(int x, int y, int z, t_map *map);
 size_t		get_hex(char *hex);
 
-/*
- * Controls function's
- */
-
-void 		move(t_fdf *fdf, int key);
+void		move(t_fdf *fdf, int key);
 void		rotate(t_fdf *fdf, int key);
 void		scale(t_fdf *fdf, int key);
 void		x_rotation(double rot[4][4], double angle);
@@ -103,18 +90,12 @@ void		y_rotation(double rot[4][4], double angle);
 void		z_rotation(double rot[4][4], double angle);
 int			close_window(void *param);
 
-/*
- * Matrix
- */
-
 void		concat_matrix(double m1[4][4], double m2[4][4], double res[4][4]);
 void		diagonalize(double matrix[4][4], double value);
 void		mtrxcpy(double src[4][4], double dest[4][4]);
-/*
- * Color
- */
 
-int			linear_gradient(unsigned int start, double position, unsigned int end);
+int			linear_gradient(unsigned int start, double position,
+							unsigned int end);
 void		colorize(t_fdf *fdf);
 
 #endif
