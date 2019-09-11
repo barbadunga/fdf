@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdio.h>
 
 void	clear_map(t_map **map, t_vec **vec)
 {

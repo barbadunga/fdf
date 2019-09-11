@@ -17,7 +17,7 @@ LFLAGS = -L minilibx_macos -lmlx -L ./Libft -lft -framework OpenGL -framework Ap
 IFLAGS = -I includes/ -I minilibx_macos -I ./Libft -I includes
 
 LIBFT_DIR = ./Libft/
-LIBFT = $(LIBFT_DIR)
+LIBFT = $(LIBFT_DIR)libft.a
 
 INC = includes/fdf.h
 SRC_DIR = src/
@@ -34,11 +34,11 @@ SRC_LST = main.c		\
 
 SOURCES = $(addprefix $(SRC_DIR), $(SRC_LST))
 
-all: $(BIN) $(LIBFT)
+all: $(BIN)
 
 $(BIN): $(LIBFT) $(SOURCES) $(INC)
-	make -C $(LIBFT_DIR)
-	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) $(IFLAGS) -o $(BIN)
+	@make -C $(LIBFT_DIR)
+	@$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) $(IFLAGS) -o $(BIN)
 
 fclean:
 	make fclean -C $(LIBFT_DIR)

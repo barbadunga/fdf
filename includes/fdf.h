@@ -79,7 +79,7 @@ void		img_pixel_put(t_fdf **fdf, t_point pixel);
 void		swap_points(t_point *p1, t_point *p2);
 void		sort_points(t_point	*p0, t_point *p1, t_point *p2);
 void		draw_line(t_fdf *fdf, t_point p0, t_point p1);
-t_point		new_point(int x, int y, int z, t_map *map);
+t_point		new_point(int x, int y, int z, int color);
 size_t		get_hex(char *hex);
 
 void		move(t_fdf *fdf, int key);

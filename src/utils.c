@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdio.h>
 
 void	sort_points(t_point *p0, t_point *p1, t_point *p2)
 {
@@ -61,7 +62,7 @@ size_t	get_hex(char *hex)
 			byte = *hex - 'A' + 10;
 		val = (val << 4u) | byte;
 	}
-	return ((size_t)val);
+	return ((size_t)val >> 4u);
 }
 
 void	diagonalize(double matrix[4][4], double value)

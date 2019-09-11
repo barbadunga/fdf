@@ -32,8 +32,8 @@ void		isometric(t_fdf *fdf)
 	i = 0;
 	fdf->scale = 1.0;
 	diagonalize(fdf->rotation, 1.0);
-	y_rotation(fdf->rotation, DEG2RAD(45));
-	z_rotation(fdf->rotation, DEG2RAD(30));
+	z_rotation(fdf->rotation, DEG2RAD(45));
+	y_rotation(fdf->rotation, DEG2RAD(-35));
 	while (i < 3)
 		fdf->translate[i++] = 0;
 }

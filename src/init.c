@@ -23,15 +23,14 @@ void	clear_all(t_fdf **fdf, t_map **map)
 	free(*map);
 }
 
-t_point	new_point(int x, int y, int z, t_map *map)
+t_point	new_point(int x, int y, int z, int color)
 {
 	t_point	p;
 
 	p.x = x;
 	p.y = y;
 	p.z = z;
-	if (map && !(p.color = (int)(map->mesh[x][y] >> 32)))
-		p.color = 0xFFFFFF;
+	p.color = color;
 	return (p);
 }
 
@@ -51,7 +50,8 @@ t_point	*new_vertex_array(t_map *map)
 		y = 0;
 		while (y < map->y_max)
 		{
-			vertex[x * map->y_max + y] = new_point(x, y, data[x][y], map);
+			vertex[x * map->y_max + y] = new_point(x, y, data[x][y],
+					data[x][y] >> 32 ? data[x][y] >> 32 : 0xFFFFFF);
 			y++;
 		}
 		x++;
@@ -80,7 +80,7 @@ t_fdf	*fdf_init(t_map **map)
 		clear_all(NULL, map);
 	if (!(fdf->mlx = mlx_init()))
 		clear_all(&fdf, map);
-	if (!(fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FileDeFler")))
+	if (!(fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "FDF")))
 		clear_all(&fdf, map);
 	if (!(fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT)))
 		clear_all(&fdf, map);
