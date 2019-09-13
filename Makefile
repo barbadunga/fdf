@@ -6,7 +6,7 @@
 #    By: mshagga <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/25 16:54:34 by mshagga           #+#    #+#              #
-#    Updated: 2019/09/13 12:28:20 by mshagga          ###   ########.fr        #
+#    Updated: 2019/09/13 13:12:47 by mshagga          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,32 +46,30 @@ OBJ = $(addprefix $(OBJ_DIR), $(OBJ_LST))
 
 all: $(BIN)
 
-$(BIN): $(OBJ) $(LIBFT) $(INC) $(MLX)
-	echo "make BIN"
-	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) $(IFLAGS) -o $(BIN) $(OBJ)
+$(BIN): $(LIBFT) $(INC) $(MLX) $(OBJ_DIR) $(OBJ)
+	@$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) $(IFLAGS) -o $(BIN) $(OBJ)
 
-$(OBJ_DIR)%.o: $(SRC)%.c $(INC)
-	echo "make OBJ"
-	mkdir -p objects
-	$(CC) $(CFLAGS) -c $(IFLAGS) $< -o $@
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC)
+	@$(CC) $(CFLAGS) -c $(IFLAGS) $< -o $@
 
 $(LIBFT):
-	echo "make LIB"
-	make -sC $(LIBFT_DIR)
+	@make -sC $(LIBFT_DIR)
 
 $(MLX):
-	echo "make MLX"
-	make -sC $(MLX_DIR)
+	@make -sC $(MLX_DIR)
 
 clean:
-	make clean -sC $(LIBFT_DIR)
-	make clean -sC $(MLX_DIR)
-	rm -rf $(OBJ_DIR)
+	@make clean -sC $(LIBFT_DIR)
+	@make clean -sC $(MLX_DIR)
+	@rm -rf $(OBJ_DIR)
 
 fclean:
-	make fclean -sC $(LIBFT_DIR)
-	make fclean -sC $(MLX_DIR)
-	rm $(BIN)
+	@make fclean -sC $(LIBFT_DIR)
+	@rm -f $(MLX)
+	@rm -f $(BIN)
 
 re: fclean all
 
